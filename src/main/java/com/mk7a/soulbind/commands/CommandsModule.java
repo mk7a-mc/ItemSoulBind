@@ -1,0 +1,79 @@
+package com.mk7a.soulbind.commands;
+
+import com.mk7a.soulbind.main.PluginConfiguration;
+import com.mk7a.soulbind.main.ItemSoulBindPlugin;
+import com.mk7a.soulbind.util.BindUtil;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.ArrayList;
+import java.util.Optional;
+
+public class CommandsModule {
+
+    protected static final String USERNAME_PLACEHOLDER = "%username%";
+    protected static final String BIND_ITEM = "bindItem";
+    protected static final String UNBIND_ITEM = "unbindItem";
+    protected static final String BIND_INV_ITEMS = "bindInvItems";
+    protected static final String BIND_ON_USE = "bindOnUse";
+    protected static final String BIND_ON_EQUIP = "bindOnEquip";
+    protected static final String BIND_ON_PICKUP = "bindOnPickup";
+    protected static final String ISB_RELOAD = "isb-reload";
+    protected static final String ISB = "isb";
+
+    private final ItemSoulBindPlugin plugin;
+    private final PluginConfiguration config;
+
+
+    public CommandsModule(ItemSoulBindPlugin plugin) {
+        this.plugin = plugin;
+        config = ItemSoulBindPlugin.getPluginConfig();
+    }
+
+
+    public void setup() {
+        new BindCommand(plugin, this).register();
+        new BindInvItemsCommand(plugin, this).register();
+        new ReloadCommand(plugin).register();
+        new SpecialBindCommands(plugin, this).register();
+        new UnbindCommand(plugin, this).register();
+    }
+
+
+    protected void bindItem(ItemStack item, Player targetPlayer, Player sender) {
+
+        if (config.displayLore) {
+
+            ItemMeta meta = item.getItemMeta();
+            ArrayList<String> newLore = new ArrayList<>();
+
+            if (meta.hasLore()) {
+                newLore.addAll(meta.getLore());
+            }
+
+            newLore.add(config.loreMsg.replaceAll(CommandsModule.USERNAME_PLACEHOLDER, targetPlayer.getName()));
+            meta.setLore(newLore);
+            item.setItemMeta(meta);
+        }
+
+        ItemStack soulBoundItem = BindUtil.setOwner(item, targetPlayer);
+        sender.getInventory().setItem(sender.getInventory().getHeldItemSlot(), soulBoundItem);
+        sender.sendMessage(config.prefix + config.bindSuccess);
+    }
+
+    protected Optional<Player> findPlayerFromName(String name) {
+
+        for (Player player : plugin.getServer().getOnlinePlayers()) {
+            if (player.getName().equalsIgnoreCase(name)) {
+                return Optional.of(player);
+            }
+        }
+        return Optional.empty();
+    }
+
+    protected boolean mainHandEmpty(Player player) {
+        return player.getInventory().getItemInMainHand().getType().equals(Material.AIR);
+    }
+}

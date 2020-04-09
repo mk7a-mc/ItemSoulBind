@@ -1,0 +1,85 @@
+name: ItemSoulBind
+version: ${project.version}
+main: com.mk7a.soulbind.main.ItemSoulBindPlugin
+api-version: "1.15"
+prefix: ItemSoulBind
+authors: [mk7a]
+description: Bind items for a single player's use only
+website: https://github.com/mk7a/ItemSoulBind
+permissions:
+  itemsoulbind.admin:
+    description: All permissions + reload command
+    default: op
+    children:
+      itemsoulbind.bind: true
+      itemsoulbind.bind.others: true
+      itemsoulbind.unbind: true
+      itemsoulbind.notify: true
+      itemsoulbind.bindinvitems: true
+      itemsoulbind.bypass: true
+      itemsoulbind.keepondeath: true
+  itemsoulbind.bind:
+    description: Allows use of /bindItem
+    default: false
+  itemsoulbind.bind.others:
+    description: Allows use of /bindItem <player>
+    default: false
+    children:
+      - itemsoulbind.bind
+  itemsoulbind.unbind:
+    description: Allows use of /unbindItem <player>
+    default: false
+  itemsoulbind.notify:
+    description: Notifies if player somehow has item soulbound to another player in their inventory
+    default: false
+  itemsoulbind.bindinvitems:
+    description: Allows use of /bindInvItems
+    default: false
+  itemsoulbind.keepondeath:
+    description: Soul bound items do not get removed from inventory when player dies
+    default: false
+  itemsoulbind.bypass:
+    description: Bypass soul bind protection, item register string, (crafting, enchanting, anvil) restrictions
+    default: false
+    children:
+      itemsoulbind.bypass.craft: true
+      itemsoulbind.bypass.enchant: true
+      itemsoulbind.bypass.anvil: true
+  itemsoulbind.bypass.craft:
+    description: Bypass crafting restriction (if enabled)
+    default: false
+  itemsoulbind.bypass.enchant:
+    description: Bypass enchanting restriction (if enabled)
+    default: false
+  itemsoulbind.bypass.anvil:
+    description: Bypass anvil restriction (if enabled)
+    default: false
+commands:
+  bindItem:
+    description: Soul bind an item
+    usage: /bindItem <username>
+  unbindItem:
+    description: Remove soul bind protection from item
+    usage: /unbindItem <username>
+  bindInvItems:
+    description: Force check player's inventory and bind any items with the register string in the lore
+    usage: /bindInvItems <username>
+  returnItems:
+    description: Get found soul bound items back
+    usage: /returnItems
+  isb-reload:
+    description: Reload config. Console Only.
+    usage: /isb-reload
+    permission: itemsoulbind.admin
+  bindOnUse:
+    description: sets item to bind on use
+    usage: /bindOnUse
+    permission: itemsoulbind.admin
+  bindOnEquip:
+    description: sets item to bind on equip
+    usage: /bindOnEquip
+    permission: itemsoulbind.admin
+  bindOnPickup:
+    description: sets item to bind on pickup
+    usage: /bindOnPickup
+    permission: itemsoulbind.admin

@@ -1,0 +1,70 @@
+# When player interacts with an item with the register string in its lore, item will be soul bound to them
+registerString: "%soulbind%"
+
+
+# SPECIAL BINDS - items with relevant bind string will only be bound in the specified conditions
+# Colour is ignored when checking for string. Case sensitive
+
+# Binds when tool is used: used to break block, sword used to hit entity
+bindOnUse: false
+bouString: "&9Soul binds on use"
+# Binds when armor is equipped through in-hand right click
+bindOnEquip: false
+boeString: "&9Soul binds on equip"
+# Binds when item is picked up
+bindOnPickup: false
+bopString: "&9Soul binds on pickup"
+
+# Disable soul bind particle+sound effects
+disableEffects: false
+
+# Display message in item lore of soul bound item
+# Use %username% for player name placeholder
+displayLoreMsg: true
+loreMsg: "&9Soul bound to %username%"
+
+# Log player detected with item soul bound to another player in console
+consoleLogDetection: true
+
+# Prevents placing soul bound blocks
+preventPlacing: false
+
+# Prevents crafting with soul bound items
+preventCraft: false
+
+# Prevents enchanting with soul bound items
+preventEnchant: false
+
+# Prevents anvil use with soul bound items
+preventAnvil: false
+
+# Blocks commands when soul bound item is held in hand
+# Only provide the first part of the command, e.g. for "/auction sell" :
+blockedCommands:
+  - "auction"
+
+# =======================
+# Messages | use '&' for color codes
+msgPrefix: "&8[&bSoul&3Bind&8]&r "
+denyMsg: "&9This item is soul bound to another player"
+detectedItemMessage: "&cAn item soul bound to another player was removed from your inventory. Event has been logged."
+detectedItemBroadcast: "was detected with an item soul bound to another player."
+noPermissionGeneric: "&cInsufficient permissions."
+noPermissionBindOthers: "&cInsufficient permissions to bind for other players."
+bindSuccess: "&aSoul bind complete."
+bindErrorHeldItem: "You must be holding an item in your main hand."
+bindErrorAlreadyBound: "This item is already soul bound."
+bindErrorNoSuchPlayer: "No such player found online."
+unbindErrorNotBound: "Item is not soul bound."
+unbindSuccess: "&aSoul bind removed."
+inventoryProcessSuccess: "&aProcessed inventory of "
+craftDeny: "&cCannot craft with soul bound items."
+enchantDeny: "&cCannot enchant soul bound items."
+anvilDeny: "&cCannot use anvil on soul bound items."
+foundItems: "&7Soul bound items found with another player have been returned to you. Use &b/returnItems &7to get them."
+noItems: "You have no items to retrieve."
+specialBindDone: "&aSpecial bind applied to item."
+cmdBlocked: "&cCannot perform this command on a soul bound item."
+# ======================
+
+configVersionDoNotModify: 1.4
