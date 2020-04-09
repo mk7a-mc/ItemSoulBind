@@ -27,10 +27,8 @@ public class ItemReturnTask extends BukkitRunnable {
     public void run() {
 
         if (foundItems.containsKey(uuid)) {
-            ArrayList<ItemStack> foundItemsList = foundItems.get(uuid);
-            if (!foundItemsList.isEmpty()) {
-                Util.sendMessage(player, ItemSoulBindPlugin.getPluginConfig().foundItems);
-            }
+
+            Util.sendMessage(player, ItemSoulBindPlugin.getPluginConfig().foundItems);
         }
     }
 }
