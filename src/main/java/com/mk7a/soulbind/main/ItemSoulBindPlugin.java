@@ -86,7 +86,7 @@ public final class ItemSoulBindPlugin extends JavaPlugin {
                 if (scanner.hasNext()) {
                     String latestVersion = scanner.nextLine();
                     String pluginVersion = getDescription().getVersion();
-                    if (!latestVersion.equalsIgnoreCase(pluginVersion)) {
+                    if (updateAvailable(pluginVersion, latestVersion)) {
                         getLogger().info("An update is available");
                         getLogger().info("https://www.spigotmc.org/resources/itemsoulbind.64541/");
                     }
@@ -95,6 +95,10 @@ public final class ItemSoulBindPlugin extends JavaPlugin {
                 getLogger().warning("Could not check for updates.");
             }
         });
+    }
+
+    private boolean updateAvailable(String pluginVersion, String latestVersion) {
+        return pluginVersion.compareTo(latestVersion) < 0;
     }
 
     @Override
