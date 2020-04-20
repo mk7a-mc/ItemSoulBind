@@ -175,7 +175,7 @@ public class ItemRegistrationListener implements Listener {
             return;
         }
 
-        if (event.getEntity() instanceof Player) {
+        if (!(event.getEntity() instanceof Player)) {
             return;
         }
 
