@@ -54,6 +54,9 @@ permissions:
   itemsoulbind.bypass.anvil:
     description: Bypass anvil restriction (if enabled)
     default: false
+  itemsoulbind.returnitems:
+    description: Permits returning of soul bound items to player and use of return items command
+    default: true
 commands:
   bindItem:
     description: Soul bind an item
@@ -67,6 +70,7 @@ commands:
   returnItems:
     description: Get found soul bound items back
     usage: /returnItems
+    permission: itemsoulbind.returnitems
   isb-reload:
     description: Reload config. Console Only.
     usage: /isb-reload

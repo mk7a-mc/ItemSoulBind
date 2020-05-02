@@ -1,6 +1,7 @@
 package com.mk7a.soulbind.itemreturn;
 
 import com.mk7a.soulbind.main.ItemSoulBindPlugin;
+import com.mk7a.soulbind.main.PluginPermissions;
 import com.mk7a.soulbind.util.Util;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -26,7 +27,7 @@ public class ItemReturnTask extends BukkitRunnable {
     @Override
     public void run() {
 
-        if (foundItems.containsKey(uuid)) {
+        if (foundItems.containsKey(uuid) && player.hasPermission(PluginPermissions.RETURN_ITEMS)) {
 
             Util.sendMessage(player, ItemSoulBindPlugin.getPluginConfig().foundItems);
         }
