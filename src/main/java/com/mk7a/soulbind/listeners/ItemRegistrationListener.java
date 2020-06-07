@@ -18,6 +18,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -54,6 +55,14 @@ public class ItemRegistrationListener implements Listener {
      */
     @EventHandler
     public void onInvClick(InventoryClickEvent event) {
+
+        if (event.getClickedInventory() == null) {
+            return;
+        }
+
+        if (event.getClickedInventory().getType().equals(InventoryType.MERCHANT)) {
+            return;
+        }
 
         if (!(event.getWhoClicked() instanceof Player)) {
             return;
