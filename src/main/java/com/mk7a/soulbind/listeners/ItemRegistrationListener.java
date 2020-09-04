@@ -8,7 +8,6 @@ import com.mk7a.soulbind.util.BindUtil;
 import com.mk7a.soulbind.util.Util;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -31,11 +30,6 @@ public class ItemRegistrationListener implements Listener {
 
     private static final String USERNAME = "%username%";
     private static final String[] armors = {"HELMET", "CHESTPLATE", "LEGGINGS", "BOOTS"};
-    private static final Material[] swords = {Material.STONE_SWORD,
-            Material.DIAMOND_SWORD,
-            Material.GOLDEN_SWORD,
-            Material.IRON_SWORD,
-            Material.WOODEN_SWORD};
 
     private final ItemSoulBindPlugin plugin;
     private final PluginConfiguration config;
@@ -166,7 +160,7 @@ public class ItemRegistrationListener implements Listener {
 
         ItemStack mainHand = player.getInventory().getItemInMainHand();
 
-        if (Arrays.asList(swords).contains(mainHand.getType())) {
+        if (mainHand.getType().toString().contains("SWORD")) {
 
             bindIfContainsString(player, mainHand, config.bindOnUseString);
         }
