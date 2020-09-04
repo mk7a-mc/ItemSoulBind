@@ -18,18 +18,16 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 
 public class ItemProtectionListener implements Listener {
 
     private final ItemSoulBindPlugin plugin;
     private final PluginConfiguration config;
-    private final HashMap<UUID, ItemStack[]> deathItems = new HashMap<>();
+    private final HashMap<UUID, Map<Integer, ItemStack>> deathItems = new HashMap<>();
 
     public ItemProtectionListener(ItemSoulBindPlugin plugin) {
         this.plugin = plugin;
@@ -95,31 +93,20 @@ public class ItemProtectionListener implements Listener {
 
         if (!event.getKeepInventory() && event.getEntity().hasPermission(PluginPermissions.KEEP_ON_DEATH)) {
 
-            List<ItemStack> drops = event.getDrops();
-            List<ItemStack> boundItemsInDrops = new ArrayList<>();
-
-            if (drops.size() > 0) {
-                for (ItemStack i : drops) {
-                    if (i != null && BindUtil.hasOwner(i)) {
-                        boundItemsInDrops.add(i);
-                    }
-                }
-            }
-
+            Map<Integer, ItemStack> boundItemsInPosition = new HashMap<>();
             ItemStack[] inventory = event.getEntity().getInventory().getContents();
 
             for (int i=0; i < inventory.length; i++) {
                 ItemStack item = inventory[i];
 
-                // Remove non bound items
-                if (item != null && !BindUtil.hasOwner(item)) {
-                    inventory[i] = null;
+                if (item != null && BindUtil.hasOwner(item)) {
+                    boundItemsInPosition.put(i, item);
                 }
             }
 
-            if (boundItemsInDrops.size() > 0) {
-                event.getDrops().removeAll(boundItemsInDrops);
-                deathItems.put(event.getEntity().getUniqueId(), inventory);
+            if (boundItemsInPosition.keySet().size() > 0) {
+                event.getDrops().removeAll(boundItemsInPosition.values());
+                deathItems.put(event.getEntity().getUniqueId(), boundItemsInPosition);
             }
 
         }
@@ -133,7 +120,23 @@ public class ItemProtectionListener implements Listener {
 
         if (deathItems.containsKey(playerUUID)) {
 
-            player.getInventory().setContents(deathItems.get(playerUUID));
+            Map<Integer, ItemStack> items = deathItems.get(playerUUID);
+            PlayerInventory playerInventory = player.getInventory();
+
+
+            for (Integer i : items.keySet()) {
+
+                if (playerInventory.getItem(i) == null) {
+
+                    playerInventory.setItem(i, items.get(i));
+
+                } else {
+                    // In case another plugin has occupied original slot of item,
+                    playerInventory.addItem(items.get(i));
+                }
+
+            }
+
             deathItems.remove(playerUUID);
         }
 
