@@ -1,7 +1,7 @@
 name: ItemSoulBind
 version: ${project.version}
 main: com.mk7a.soulbind.main.ItemSoulBindPlugin
-api-version: "1.15"
+api-version: "1.16"
 prefix: ItemSoulBind
 authors: [mk7a]
 description: Bind items for a single player's use only
