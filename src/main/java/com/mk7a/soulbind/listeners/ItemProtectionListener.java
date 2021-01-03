@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockDispenseArmorEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -166,6 +167,24 @@ public class ItemProtectionListener implements Listener {
 
         if (item.hasItemMeta() && !BindUtil.hasAccess(item, player)) {
 
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onArmorDispense(BlockDispenseArmorEvent event) {
+
+        boolean isPlayer = event.getTargetEntity() instanceof Player;
+        if (!isPlayer) {
+            return;
+        }
+
+        Player player = (Player) event.getTargetEntity();
+        if (player.hasPermission(PluginPermissions.BYPASS) || player.getGameMode().equals(GameMode.CREATIVE)) {
+            return;
+        }
+        ItemStack item = event.getItem();
+        if (BindUtil.hasOwner(item) && !BindUtil.hasAccess(item, player)) {
             event.setCancelled(true);
         }
     }
