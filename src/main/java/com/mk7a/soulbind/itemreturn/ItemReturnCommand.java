@@ -50,7 +50,7 @@ public class ItemReturnCommand implements CommandExecutor {
         }
 
 
-        Inventory getItemsGUI = plugin.getServer().createInventory(null, RETURN_INV_TYPE, ItemReturnModule.INV_TITLE);
+        Inventory getItemsGUI = plugin.getServer().createInventory(new ItemReturnGUIHolder(), RETURN_INV_TYPE, ItemReturnModule.INV_TITLE);
 
         ArrayList<ItemStack> foundItemsList = foundItems.get(uuid);
 
