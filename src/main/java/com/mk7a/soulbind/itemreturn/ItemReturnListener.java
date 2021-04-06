@@ -126,8 +126,9 @@ public class ItemReturnListener implements Listener {
 
     @EventHandler
     public void invClickGUI(InventoryCloseEvent event) {
-    	//Check the instance of the InventoryHolder to make sure it is not a dropper gui from anther plugin
-        if (event.getInventory().getHolder() != null && event.getInventory().getHolder() instanceof ItemReturnGUIHolder && event.getInventory().getType() == InventoryType.DROPPER) {
+        boolean isReturnGUI = event.getInventory().getHolder() instanceof ItemReturnGUIHolder
+                && event.getInventory().getType() == InventoryType.DROPPER;
+        if (isReturnGUI) {
             for (ItemStack item : event.getInventory().getContents()) {
                 if (item != null) {
                     event.getPlayer().getWorld().dropItemNaturally(event.getPlayer().getLocation(), item);
