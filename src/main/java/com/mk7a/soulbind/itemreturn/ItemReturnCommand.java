@@ -17,7 +17,7 @@ import java.util.HashMap;
 public class ItemReturnCommand implements CommandExecutor {
 
     protected static final String RETURN_ITEMS = "returnItems";
-    private static InventoryType RETURN_INV_TYPE = InventoryType.DROPPER;
+    private static final InventoryType RETURN_INV_TYPE = InventoryType.DROPPER;
 
     private final ItemSoulBindPlugin plugin;
     private final PluginConfiguration pluginConfig;
@@ -49,7 +49,7 @@ public class ItemReturnCommand implements CommandExecutor {
             return true;
         }
 
-        //Use our ItemReturnGUIHolder for identifying whether a gui belongs to us or not
+        // Use custom InventoryHolder to identify GUI in inventory click event
         Inventory getItemsGUI = plugin.getServer().createInventory(new ItemReturnGUIHolder(), RETURN_INV_TYPE, ItemReturnModule.INV_TITLE);
 
         ArrayList<ItemStack> foundItemsList = foundItems.get(uuid);
