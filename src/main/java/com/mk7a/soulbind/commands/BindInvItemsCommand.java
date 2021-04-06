@@ -4,7 +4,6 @@ import com.mk7a.soulbind.main.ItemSoulBindPlugin;
 import com.mk7a.soulbind.main.PluginConfiguration;
 import com.mk7a.soulbind.main.PluginPermissions;
 import com.mk7a.soulbind.util.BindUtil;
-import com.mk7a.soulbind.util.DataContainerUtil;
 import com.mk7a.soulbind.util.Util;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

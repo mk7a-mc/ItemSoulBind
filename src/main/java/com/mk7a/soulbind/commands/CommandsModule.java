@@ -3,6 +3,7 @@ package com.mk7a.soulbind.commands;
 import com.mk7a.soulbind.main.PluginConfiguration;
 import com.mk7a.soulbind.main.ItemSoulBindPlugin;
 import com.mk7a.soulbind.util.BindUtil;
+import com.mk7a.soulbind.util.Util;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -14,6 +15,7 @@ import java.util.Optional;
 public class CommandsModule {
 
     protected static final String USERNAME_PLACEHOLDER = "%username%";
+    protected static final String BIND_ALL = "bindAll";
     protected static final String BIND_ITEM = "bindItem";
     protected static final String UNBIND_ITEM = "unbindItem";
     protected static final String BIND_INV_ITEMS = "bindInvItems";
@@ -39,10 +41,11 @@ public class CommandsModule {
         new ReloadCommand(plugin).register();
         new SpecialBindCommands(plugin, this).register();
         new UnbindCommand(plugin, this).register();
+        new BindAllCommand(plugin, this).register();
     }
 
 
-    protected void bindItem(ItemStack item, Player targetPlayer, Player sender) {
+    protected void bindItem(ItemStack item, Player targetPlayer, Player itemHolderPlayer, boolean sendBindMsg) {
 
         if (config.displayLore) {
 
@@ -59,8 +62,10 @@ public class CommandsModule {
         }
 
         ItemStack soulBoundItem = BindUtil.setOwner(item, targetPlayer);
-        sender.getInventory().setItem(sender.getInventory().getHeldItemSlot(), soulBoundItem);
-        sender.sendMessage(config.prefix + config.bindSuccess);
+        itemHolderPlayer.getInventory().setItem(itemHolderPlayer.getInventory().getHeldItemSlot(), soulBoundItem);
+        if (sendBindMsg) {
+            Util.sendMessage(itemHolderPlayer, config.bindSuccess);
+        }
     }
 
     protected Optional<Player> findPlayerFromName(String name) {

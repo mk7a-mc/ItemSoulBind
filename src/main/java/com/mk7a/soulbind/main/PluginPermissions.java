@@ -14,6 +14,6 @@ public final class PluginPermissions {
     public static final String BYPASS_ENCHANT = "itemsoulbind.bypass.enchant";
     public static final String BYPASS_ANVIL = "itemsoulbind.bypass.anvil";
     public static final String RETURN_ITEMS = "itemsoulbind.returnitems";
-
+    public static final String RETURN_BIND_ALL = "itemsoulbind.bindall";
 
 }

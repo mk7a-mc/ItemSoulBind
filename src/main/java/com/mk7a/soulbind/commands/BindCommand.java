@@ -62,7 +62,7 @@ public class BindCommand implements CommandExecutor {
 
         if (bindOnSelf) {
 
-            module.bindItem(item, player, player);
+            module.bindItem(item, player, player, true);
             Util.bindEffect(player);
             return true;
 
@@ -80,7 +80,7 @@ public class BindCommand implements CommandExecutor {
                 return true;
             }
 
-            module.bindItem(item, targetPlayer.get(), player);
+            module.bindItem(item, targetPlayer.get(), player, true);
             Util.bindEffect(player);
             return true;
         }
@@ -88,7 +88,6 @@ public class BindCommand implements CommandExecutor {
 
         return false;
     }
-
 
 
 }

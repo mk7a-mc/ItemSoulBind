@@ -12,6 +12,7 @@ permissions:
     default: op
     children:
       itemsoulbind.bind: true
+      itemsoulbind.bindall: true
       itemsoulbind.bind.others: true
       itemsoulbind.unbind: true
       itemsoulbind.notify: true
@@ -20,6 +21,9 @@ permissions:
       itemsoulbind.keepondeath: true
   itemsoulbind.bind:
     description: Allows use of /bindItem
+    default: false
+  itemsoulbind.bindall:
+    description: Allows use of /bindAll
     default: false
   itemsoulbind.bind.others:
     description: Allows use of /bindItem <player>
@@ -61,6 +65,9 @@ commands:
   bindItem:
     description: Soul bind an item
     usage: /bindItem <username>
+  bindAll:
+    description: Bind all items in inventory
+    usage: /bindAll
   unbindItem:
     description: Remove soul bind protection from item
     usage: /unbindItem <username>
