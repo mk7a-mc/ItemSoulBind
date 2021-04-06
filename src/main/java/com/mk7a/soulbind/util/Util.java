@@ -37,11 +37,11 @@ public final class Util {
 
     /**
      * Send plugin message with prefix
-     * @param sender Target CommandSender
+     * @param target Target CommandSender
      * @param message Message content
      */
-    public static void sendMessage(CommandSender sender, String message) {
-        sender.sendMessage(ItemSoulBindPlugin.getPluginConfig().prefix + message);
+    public static void sendMessage(CommandSender target, String message) {
+        target.sendMessage(ItemSoulBindPlugin.getPluginConfig().prefix + message);
     }
 
 
