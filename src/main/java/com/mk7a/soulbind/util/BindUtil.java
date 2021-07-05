@@ -33,7 +33,7 @@ public final class BindUtil {
     public static boolean hasAccess(ItemStack item, Player player) {
 
         Optional<String> ownerUUID = DataContainerUtil.readContainerTag(item, key);
-        return !ownerUUID.isPresent() || ownerUUID.get().equalsIgnoreCase(player.getUniqueId().toString());
+        return ownerUUID.isEmpty() || ownerUUID.get().equalsIgnoreCase(player.getUniqueId().toString());
     }
 
 

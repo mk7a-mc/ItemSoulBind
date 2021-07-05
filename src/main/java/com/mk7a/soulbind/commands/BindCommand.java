@@ -34,11 +34,9 @@ public class BindCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player player)) {
             return false;
         }
-
-        Player player = (Player) sender;
 
         if (!player.hasPermission(PluginPermissions.BIND)) {
             Util.sendMessage(player, config.noPermissionGeneric);
@@ -70,7 +68,7 @@ public class BindCommand implements CommandExecutor {
 
             Optional<Player> targetPlayer = module.findPlayerFromName(args[0]);
 
-            if (!targetPlayer.isPresent()) {
+            if (targetPlayer.isEmpty()) {
                 Util.sendMessage(player, config.bindErrorNoSuchPlayer);
                 return true;
             }

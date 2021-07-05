@@ -37,11 +37,10 @@ public class ItemReturnCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
 
-        if (!(commandSender instanceof Player)) {
+        if (!(commandSender instanceof Player player)) {
             return false;
         }
 
-        Player player = (Player) commandSender;
         String uuid = player.getUniqueId().toString();
 
         if (!foundItems.containsKey(uuid)) {

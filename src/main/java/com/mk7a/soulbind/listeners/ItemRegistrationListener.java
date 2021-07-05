@@ -58,11 +58,9 @@ public class ItemRegistrationListener implements Listener {
             return;
         }
 
-        if (!(event.getWhoClicked() instanceof Player)) {
+        if (!(event.getWhoClicked() instanceof Player player)) {
             return;
         }
-
-        Player player = (Player) event.getWhoClicked();
 
         if (canIgnoreSoulBind(player)) {
             return;
