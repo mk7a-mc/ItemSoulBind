@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -71,8 +72,14 @@ public class ItemReturnListener implements Listener {
     }
 
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void invClickReturn(InventoryClickEvent event) {
+
+        // Prevent return system triggering on items in GUIs where click is cancelled.
+        // Event priority set to HIGHEST to ensure later execution.
+        if (event.isCancelled()) {
+            return;
+        }
 
         if (!(event.getWhoClicked() instanceof Player)) {
             return;
