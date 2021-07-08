@@ -42,9 +42,7 @@ public class ItemProtectionListener implements Listener {
     @EventHandler
     public void onInvClick(InventoryClickEvent event) {
 
-        if (event.getWhoClicked() instanceof Player) {
-
-            Player player = (Player) event.getWhoClicked();
+        if (event.getWhoClicked() instanceof Player player) {
 
             if (player.hasPermission(PluginPermissions.BYPASS) || player.getGameMode().equals(GameMode.CREATIVE)) {
                 return;
@@ -71,9 +69,7 @@ public class ItemProtectionListener implements Listener {
     @EventHandler
     public void onPickUp(EntityPickupItemEvent event) {
 
-        if (event.getEntity() instanceof Player ) {
-
-            Player player = (Player) event.getEntity();
+        if (event.getEntity() instanceof Player player) {
 
             if (player.hasPermission(PluginPermissions.BYPASS) || player.getGameMode().equals(GameMode.CREATIVE)) {
                 return;
