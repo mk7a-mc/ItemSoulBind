@@ -32,11 +32,6 @@
             <id>CodeMC</id>
             <url>https://repo.codemc.org/repository/maven-public</url>
         </repository>
-        <!-- Maven Shade plugin requires snapshot for Java 17 support -->
-        <repository>
-            <id>apache.snapshots</id>
-            <url>https://repository.apache.org/snapshots/</url>
-        </repository>
     </repositories>
 
     <dependencies>
@@ -69,7 +64,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.3.1-SNAPSHOT</version>
+                <version>3.3.0</version>
                 <configuration>
                     <relocations>
                         <relocation>
