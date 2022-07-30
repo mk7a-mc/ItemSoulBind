@@ -42,7 +42,7 @@ public class ItemModificationListener implements Listener {
 
         for (ItemStack item : matrix) {
             if (item != null) {
-                if (BindUtil.hasOwner(item)) {
+                if (BindUtil.hasBind(item)) {
 
                     Util.sendMessage(player, config.craftDeny);
                     player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1F, 1F);
@@ -62,7 +62,7 @@ public class ItemModificationListener implements Listener {
             return;
         }
 
-        if (BindUtil.hasOwner(event.getItem())) {
+        if (BindUtil.hasBind(event.getItem())) {
 
             Util.sendMessage(player, config.enchantDeny);
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1F, 1F);
@@ -89,7 +89,7 @@ public class ItemModificationListener implements Listener {
 
             for (ItemStack item : anvil) {
                 if (item != null) {
-                    if (BindUtil.hasOwner(item)) {
+                    if (BindUtil.hasBind(item)) {
 
                         Util.sendMessage(player, config.anvilDeny);
                         player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1F, 1F);

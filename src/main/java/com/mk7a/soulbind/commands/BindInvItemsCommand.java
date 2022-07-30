@@ -78,7 +78,7 @@ public class BindInvItemsCommand implements CommandExecutor {
 
                     meta.setLore(lore);
                     currentItem.setItemMeta(meta);
-                    ItemStack regItem = BindUtil.setOwner(currentItem, targetPlayer);
+                    ItemStack regItem = BindUtil.setPlayerOwner(currentItem, targetPlayer);
 
                     invContents[i] = regItem;
                     break;

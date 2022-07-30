@@ -1,11 +1,11 @@
 package com.mk7a.soulbind.itemreturn;
 
+import com.mk7a.soulbind.listeners.Access;
 import com.mk7a.soulbind.main.ItemSoulBindPlugin;
 import com.mk7a.soulbind.main.PluginConfiguration;
 import com.mk7a.soulbind.main.PluginPermissions;
 import com.mk7a.soulbind.util.BindUtil;
 import com.mk7a.soulbind.util.Util;
-import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -85,7 +85,7 @@ public class ItemReturnListener implements Listener {
             return;
         }
 
-        if (player.hasPermission(PluginPermissions.BYPASS) || player.getGameMode().equals(GameMode.CREATIVE)) {
+        if (Util.canIgnoreSoulBind(player)) {
             return;
         }
 
@@ -93,40 +93,52 @@ public class ItemReturnListener implements Listener {
                 && event.getClickedInventory() != null && event.getClickedInventory().getHolder() != null) {
 
             ItemStack clickedItem = event.getCurrentItem();
-
             boolean clickInsideOwnInventory = event.getClickedInventory().getHolder().equals(player);
+            Access accessLevel = BindUtil.getAccessLevel(clickedItem, player);
 
-            if (!BindUtil.hasAccess(clickedItem, player) && clickInsideOwnInventory) {
+            if (accessLevel != Access.ALLOW && clickInsideOwnInventory) {
 
-                String notifyString = Util.color(String.format("&c(%s) %s", player.getName(), config.detectedItemBroadcast));
+                event.setCancelled(true);
 
-                Util.sendMessage(player, config.detectedItemMessage);
+                String playerNotifyString;
+                String adminNotifyString;
+
+
+                // If player bound, return item to player
+                if (accessLevel == Access.DENY_PLAYER) {
+
+                    player.getInventory().setItem(event.getSlot(), new ItemStack(Material.AIR));
+                    String itemOwnerUUID = BindUtil.getPlayerOwner(clickedItem);
+                    foundItems.putIfAbsent(itemOwnerUUID, new ArrayList<>());
+                    ArrayList<ItemStack> foundItemsList = foundItems.get(itemOwnerUUID);
+                    foundItemsList.add(clickedItem);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 1F, 1F);
+
+                    adminNotifyString = Util.color(String.format("&c(%s) %s", player.getName(), config.detectedItemBroadcast));
+                    playerNotifyString = config.detectedItemMessage;
+
+
+                } else {
+
+                    adminNotifyString = Util.color(String.format("&c(%s) %s", player.getName(), config.detectedItemBroadcastGroup));
+                    playerNotifyString = config.detectedItemMessageGroup;
+                }
+
+                Util.sendMessage(player, playerNotifyString);
 
                 if (config.consoleLogDetection) {
-                    plugin.getLogger().info(notifyString);
+                    plugin.getLogger().info(adminNotifyString);
                 }
 
                 for (Player onlinePlayer : plugin.getServer().getOnlinePlayers()) {
                     if (onlinePlayer.hasPermission(PluginPermissions.NOTIFY)) {
-                        onlinePlayer.sendMessage(notifyString);
+                        onlinePlayer.sendMessage(adminNotifyString);
                     }
                 }
-
-                event.setCancelled(true);
-                player.getInventory().setItem(event.getSlot(), new ItemStack(Material.AIR));
-
-                String itemOwnerUUID = BindUtil.getOwnerUUID(clickedItem);
-                foundItems.putIfAbsent(itemOwnerUUID, new ArrayList<>());
-                ArrayList<ItemStack> foundItemsList = foundItems.get(itemOwnerUUID);
-
-                foundItemsList.add(clickedItem);
-
-                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 1F, 1F);
 
             }
         }
     }
-
 
 
     @EventHandler
