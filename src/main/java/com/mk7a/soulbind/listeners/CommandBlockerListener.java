@@ -1,7 +1,7 @@
 package com.mk7a.soulbind.listeners;
 
-import com.mk7a.soulbind.main.PluginConfiguration;
 import com.mk7a.soulbind.main.ItemSoulBindPlugin;
+import com.mk7a.soulbind.main.PluginConfiguration;
 import com.mk7a.soulbind.util.BindUtil;
 import com.mk7a.soulbind.util.Util;
 import org.bukkit.Material;
@@ -40,7 +40,7 @@ public class CommandBlockerListener implements Listener {
             if (!mainHandItem.getType().equals(Material.AIR)) {
 
 
-                if (BindUtil.hasOwner(mainHandItem)) {
+                if (BindUtil.hasBind(mainHandItem)) {
 
                     event.setCancelled(true);
                     Util.sendMessage(player, config.cmdBlocked);

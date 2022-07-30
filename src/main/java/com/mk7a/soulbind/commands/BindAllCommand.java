@@ -46,7 +46,7 @@ public class BindAllCommand implements CommandExecutor {
                 continue;
             }
 
-            module.bindItem(item, player, player, false);
+            module.bindItemToPlayer(item, player, player, false);
         }
 
         Util.sendMessage(player, config.bindSuccess);

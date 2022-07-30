@@ -1,11 +1,10 @@
 package com.mk7a.soulbind.listeners;
 
+import com.mk7a.soulbind.main.ItemSoulBindPlugin;
 import com.mk7a.soulbind.main.PluginConfiguration;
 import com.mk7a.soulbind.main.PluginPermissions;
-import com.mk7a.soulbind.main.ItemSoulBindPlugin;
 import com.mk7a.soulbind.util.BindUtil;
 import com.mk7a.soulbind.util.Util;
-import org.bukkit.GameMode;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,7 +20,9 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 
 public class ItemProtectionListener implements Listener {
@@ -44,7 +45,7 @@ public class ItemProtectionListener implements Listener {
 
         if (event.getWhoClicked() instanceof Player player) {
 
-            if (player.hasPermission(PluginPermissions.BYPASS) || player.getGameMode().equals(GameMode.CREATIVE)) {
+            if (Util.canIgnoreSoulBind(player)) {
                 return;
             }
 
@@ -53,13 +54,16 @@ public class ItemProtectionListener implements Listener {
                     && !event.getClickedInventory().getHolder().equals(player)) {
 
                 ItemStack clickedItem = event.getCurrentItem();
-
-                if (!BindUtil.hasAccess(clickedItem, player)) {
+                Access access = BindUtil.getAccessLevel(clickedItem, player);
+                if (access != Access.ALLOW) {
 
                     event.setCancelled(true);
-                    Util.sendMessage(player, config.denyMsg);
                     player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1F, 1F);
 
+                    switch (access) {
+                        case DENY_PLAYER -> Util.sendMessage(player, config.denyMsg);
+                        case DENY_GROUP -> Util.sendMessage(player, config.denyMsgGroup);
+                    }
                 }
             }
 
@@ -71,13 +75,13 @@ public class ItemProtectionListener implements Listener {
 
         if (event.getEntity() instanceof Player player) {
 
-            if (player.hasPermission(PluginPermissions.BYPASS) || player.getGameMode().equals(GameMode.CREATIVE)) {
+            if (Util.canIgnoreSoulBind(player)) {
                 return;
             }
 
             ItemStack item = event.getItem().getItemStack();
 
-            if (!BindUtil.hasAccess(item, player)) {
+            if (BindUtil.getAccessLevel(item, player) != Access.ALLOW) {
 
                 event.setCancelled(true);
             }
@@ -96,7 +100,7 @@ public class ItemProtectionListener implements Listener {
             for (int i=0; i < inventory.length; i++) {
                 ItemStack item = inventory[i];
 
-                if (item != null && BindUtil.hasOwner(item)) {
+                if (item != null && BindUtil.hasBind(item)) {
                     boundItemsInPosition.put(i, item);
                 }
             }
@@ -144,7 +148,7 @@ public class ItemProtectionListener implements Listener {
 
         if (config.preventPlacing) {
             ItemStack placedItem = event.getItemInHand();
-            if (BindUtil.hasOwner(placedItem)) {
+            if (BindUtil.hasBind(placedItem)) {
                 event.setCancelled(true);
             }
         }
@@ -155,13 +159,13 @@ public class ItemProtectionListener implements Listener {
 
         Player player = event.getPlayer();
 
-        if (player.hasPermission(PluginPermissions.BYPASS) || player.getGameMode().equals(GameMode.CREATIVE)) {
+        if (Util.canIgnoreSoulBind(player)) {
             return;
         }
 
         ItemStack item = event.getArmorStandItem();
 
-        if (item.hasItemMeta() && !BindUtil.hasAccess(item, player)) {
+        if (item.hasItemMeta() && BindUtil.getAccessLevel(item, player) != Access.ALLOW) {
 
             event.setCancelled(true);
         }
@@ -170,17 +174,15 @@ public class ItemProtectionListener implements Listener {
     @EventHandler
     public void onArmorDispense(BlockDispenseArmorEvent event) {
 
-        boolean isPlayer = event.getTargetEntity() instanceof Player;
-        if (!isPlayer) {
+        if (!(event.getTargetEntity() instanceof Player player)) {
             return;
         }
 
-        Player player = (Player) event.getTargetEntity();
-        if (player.hasPermission(PluginPermissions.BYPASS) || player.getGameMode().equals(GameMode.CREATIVE)) {
+        if (Util.canIgnoreSoulBind(player)) {
             return;
         }
         ItemStack item = event.getItem();
-        if (BindUtil.hasOwner(item) && !BindUtil.hasAccess(item, player)) {
+        if (BindUtil.hasBind(item) && BindUtil.getAccessLevel(item, player) != Access.ALLOW) {
             event.setCancelled(true);
         }
     }

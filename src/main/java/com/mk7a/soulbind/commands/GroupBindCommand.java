@@ -11,23 +11,21 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Optional;
-
-public class BindCommand implements CommandExecutor {
+public class GroupBindCommand implements CommandExecutor {
 
 
     private final ItemSoulBindPlugin plugin;
     private final CommandsModule module;
     private final PluginConfiguration config;
 
-    BindCommand(ItemSoulBindPlugin plugin, CommandsModule module) {
+    GroupBindCommand(ItemSoulBindPlugin plugin, CommandsModule module) {
         this.plugin = plugin;
         this.module = module;
         this.config = ItemSoulBindPlugin.getPluginConfig();
     }
 
     public void register() {
-        plugin.getCommand(CommandsModule.BIND_ITEM).setExecutor(this);
+        plugin.getCommand(CommandsModule.GROUP_BIND_ITEM).setExecutor(this);
     }
 
 
@@ -38,9 +36,13 @@ public class BindCommand implements CommandExecutor {
             return false;
         }
 
-        if (!player.hasPermission(PluginPermissions.BIND)) {
+        if (!player.hasPermission(PluginPermissions.GROUP_BIND)) {
             Util.sendMessage(player, config.noPermissionGeneric);
             return true;
+        }
+
+        if (args.length < 1) {
+            return false;
         }
 
         if (module.mainHandEmpty(player)) {
@@ -55,37 +57,13 @@ public class BindCommand implements CommandExecutor {
             return true;
         }
 
-        boolean bindOnSelf = args.length == 0;
-        boolean bindToPlayer = args.length == 1;
+        module.bindItemToGroupPerm(item, args[0], player);
 
-        if (bindOnSelf) {
-
-            module.bindItemToPlayer(item, player, player, true);
-            Util.bindEffect(player);
-            return true;
-
-        } else if (bindToPlayer) {
-
-            Optional<Player> targetPlayer = module.findPlayerFromName(args[0]);
-
-            if (targetPlayer.isEmpty()) {
-                Util.sendMessage(player, config.bindErrorNoSuchPlayer);
-                return true;
-            }
-
-            if (!player.hasPermission(PluginPermissions.BIND_OTHERS)) {
-                Util.sendMessage(player, config.noPermissionBindOthers);
-                return true;
-            }
-
-            module.bindItemToPlayer(item, targetPlayer.get(), player, true);
-
-            return true;
-        }
-
-
-        return false;
+        return true;
     }
+
+
+
 
 
 }

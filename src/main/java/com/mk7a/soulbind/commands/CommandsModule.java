@@ -1,7 +1,8 @@
 package com.mk7a.soulbind.commands;
 
-import com.mk7a.soulbind.main.PluginConfiguration;
 import com.mk7a.soulbind.main.ItemSoulBindPlugin;
+import com.mk7a.soulbind.main.PluginConfiguration;
+import com.mk7a.soulbind.main.PluginPermissions;
 import com.mk7a.soulbind.util.BindUtil;
 import com.mk7a.soulbind.util.Util;
 import org.bukkit.Material;
@@ -15,8 +16,10 @@ import java.util.Optional;
 public class CommandsModule {
 
     protected static final String USERNAME_PLACEHOLDER = "%username%";
+    protected static final String GROUP_PLACEHOLDER = "%group%";
     protected static final String BIND_ALL = "bindAll";
     protected static final String BIND_ITEM = "bindItem";
+    protected static final String GROUP_BIND_ITEM = "groupBindItem";
     protected static final String UNBIND_ITEM = "unbindItem";
     protected static final String BIND_INV_ITEMS = "bindInvItems";
     protected static final String BIND_ON_USE = "bindOnUse";
@@ -42,10 +45,11 @@ public class CommandsModule {
         new SpecialBindCommands(plugin, this).register();
         new UnbindCommand(plugin, this).register();
         new BindAllCommand(plugin, this).register();
+        new GroupBindCommand(plugin, this).register();
     }
 
 
-    protected void bindItem(ItemStack item, Player targetPlayer, Player itemHolderPlayer, boolean sendBindMsg) {
+    protected void bindItemToPlayer(ItemStack item, Player targetPlayer, Player itemHolderPlayer, boolean sendBindMsg) {
 
         if (config.displayLore) {
 
@@ -61,12 +65,42 @@ public class CommandsModule {
             item.setItemMeta(meta);
         }
 
-        ItemStack soulBoundItem = BindUtil.setOwner(item, targetPlayer);
+        ItemStack soulBoundItem = BindUtil.setPlayerOwner(item, targetPlayer);
         itemHolderPlayer.getInventory().setItem(itemHolderPlayer.getInventory().getHeldItemSlot(), soulBoundItem);
         if (sendBindMsg) {
             Util.sendMessage(itemHolderPlayer, config.bindSuccess);
         }
+
+        Util.bindEffect(itemHolderPlayer);
     }
+
+    protected void bindItemToGroupPerm(ItemStack item, String groupPerm, Player itemHolderPlayer) {
+
+        if (config.displayLoreGroup) {
+
+            ItemMeta meta = item.getItemMeta();
+            ArrayList<String> newLore = new ArrayList<>();
+
+            if (meta.hasLore()) {
+                newLore.addAll(meta.getLore());
+            }
+
+            newLore.add(config.loreMsgGroup.replaceAll(CommandsModule.GROUP_PLACEHOLDER, groupPerm));
+            meta.setLore(newLore);
+            item.setItemMeta(meta);
+        }
+
+        ItemStack soulBoundItem = BindUtil.setGroupOwner(item, formatCompleteGroupPerm(groupPerm));
+        itemHolderPlayer.getInventory().setItem(itemHolderPlayer.getInventory().getHeldItemSlot(), soulBoundItem);
+        Util.sendMessage(itemHolderPlayer, config.bindSuccess);
+        Util.bindEffect(itemHolderPlayer);
+    }
+
+    private String formatCompleteGroupPerm(String groupPerm) {
+        return PluginPermissions.GROUP_BIND_ROOT + groupPerm;
+    }
+
+
 
     protected Optional<Player> findPlayerFromName(String name) {
 

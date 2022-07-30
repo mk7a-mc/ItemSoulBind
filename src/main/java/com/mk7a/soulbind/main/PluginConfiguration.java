@@ -11,10 +11,13 @@ public class PluginConfiguration {
     public String prefix;
     public String registerString;
     public String loreMsg;
-    public String loreMsgStart; // used for checks
+    public String loreMsgGroup;
     public String denyMsg;
+    public String denyMsgGroup;
     public String detectedItemMessage;
+    public String detectedItemMessageGroup;
     public String detectedItemBroadcast;
+    public String detectedItemBroadcastGroup;
     public String noPermissionGeneric;
     public String noPermissionBindOthers;
     public String bindSuccess;
@@ -36,6 +39,7 @@ public class PluginConfiguration {
     public String cmdBlocked;
 
     public Boolean displayLore;
+    public Boolean displayLoreGroup;
     public Boolean preventPlacing;
     public Boolean preventCraft;
     public Boolean preventEnchant;
@@ -63,8 +67,9 @@ public class PluginConfiguration {
 
         registerString = config.getString("registerString");
         displayLore = config.getBoolean("displayLoreMsg");
+        displayLoreGroup = config.getBoolean("displayLoreMsgGroup");
         loreMsg = color(config.getString("loreMsg"));
-        loreMsgStart = loreMsg.split("%")[0];
+        loreMsgGroup = color(config.getString("loreMsgGroup"));
         prefix = color(config.getString("msgPrefix"));
 
         consoleLogDetection = config.getBoolean("consoleLogDetection");
@@ -78,8 +83,11 @@ public class PluginConfiguration {
         disableEffects = config.getBoolean("disableEffects");
 
         denyMsg = color(config.getString("denyMsg"));
+        denyMsgGroup = color(config.getString("denyMsgGroup"));
         detectedItemMessage = color(config.getString("detectedItemMessage"));
+        detectedItemMessageGroup = color(config.getString("detectedItemMessageGroup"));
         detectedItemBroadcast = color(config.getString("detectedItemBroadcast"));
+        detectedItemBroadcastGroup = color(config.getString("detectedItemBroadcastGroup"));
         noPermissionGeneric = color(config.getString("noPermissionGeneric"));
         noPermissionBindOthers = color(config.getString("noPermissionBindOthers"));
         bindSuccess = color(config.getString("bindSuccess"));

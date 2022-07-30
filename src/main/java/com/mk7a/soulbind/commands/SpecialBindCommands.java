@@ -52,7 +52,7 @@ public class SpecialBindCommands implements CommandExecutor {
 
         ItemStack item = player.getInventory().getItemInMainHand();
 
-        if (BindUtil.hasOwner(item)) {
+        if (BindUtil.hasBind(item)) {
             Util.sendMessage(player, config.bindErrorAlreadyBound);
         }
 
