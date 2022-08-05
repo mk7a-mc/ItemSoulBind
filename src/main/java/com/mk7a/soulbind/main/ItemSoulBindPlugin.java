@@ -20,20 +20,22 @@ import java.util.Scanner;
 
 public final class ItemSoulBindPlugin extends JavaPlugin {
 
+    public static final int BSTATS_PLUGIN_ID = 4271;
     // Do not modify or backwards compatibility will break
-    public NamespacedKey key = new NamespacedKey(this, "SoulBindUUID");
+    public NamespacedKey bindKey = new NamespacedKey(this, "SoulBindUUID");
+    public NamespacedKey groupBindKey = new NamespacedKey(this, "SoulBindGroup");
 
-    private static final double CONFIG_VER = 1.4;
+    private static final double CONFIG_VER = 1.5;
     private static final String VERSION_PATH = "configVersionDoNotModify";
 
-    static protected PluginConfiguration pluginConfig;
+    private static PluginConfiguration pluginConfig;
 
     @Override
     public void onEnable() {
 
         updateCheck();
 
-        BindUtil.setKey(key);
+        BindUtil.setKeys(bindKey, groupBindKey);
 
         pluginConfig = new PluginConfiguration(this);
         reloadPluginConfig();
@@ -44,8 +46,7 @@ public final class ItemSoulBindPlugin extends JavaPlugin {
 
         new ItemReturnModule(this).setup();
 
-        int pluginID = 4271;
-        new Metrics(this, pluginID);
+        new Metrics(this, BSTATS_PLUGIN_ID);
 
     }
 
@@ -66,7 +67,7 @@ public final class ItemSoulBindPlugin extends JavaPlugin {
         if (!validConfig) {
             Bukkit.getLogger().info("=================================================================================");
             this.getLogger().warning(" Warning: outdated config. Some default values will be used.");
-            this.getLogger().warning(" Please re-generate or get the latest config from spigot.");
+            this.getLogger().warning(" Please re-generate or get the latest config from spigot/github.");
             Bukkit.getLogger().info("=================================================================================");
         }
 

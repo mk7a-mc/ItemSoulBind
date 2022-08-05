@@ -1,7 +1,9 @@
 package com.mk7a.soulbind.util;
 
 import com.mk7a.soulbind.main.ItemSoulBindPlugin;
+import com.mk7a.soulbind.main.PluginPermissions;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
@@ -11,6 +13,7 @@ public final class Util {
 
     /**
      * Short chat message formatting method. Using '&' character for format codes
+     *
      * @param i Input string
      * @return Formatted message
      */
@@ -20,7 +23,8 @@ public final class Util {
 
 
     /**
-     * Do soul binding particle and sound effects on player, if feature not disabled in config.
+     * Do soul binding particle and sound effects on player, if enabled in config.
+     *
      * @param player Target player
      */
     public static void bindEffect(Player player) {
@@ -37,7 +41,8 @@ public final class Util {
 
     /**
      * Send plugin message with prefix
-     * @param target Target CommandSender
+     *
+     * @param target  Target CommandSender
      * @param message Message content
      */
     public static void sendMessage(CommandSender target, String message) {
@@ -45,4 +50,8 @@ public final class Util {
     }
 
 
+    public static boolean canIgnoreSoulBind(Player player) {
+
+        return player.hasPermission(PluginPermissions.BYPASS) || player.getGameMode().equals(GameMode.CREATIVE);
+    }
 }

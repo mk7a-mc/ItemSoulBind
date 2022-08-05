@@ -1,9 +1,12 @@
 # When player interacts with an item with the register string in its lore, item will be soul bound to them
 registerString: "%soulbind%"
-
+# Group bind string
+#   Place permission after this string, terminated by a space or end of line
+#   Example: %soulbindgroup%perm which will have permission itemsoulbind.group.perm
+groupRegisterString: "%soulbindgroup%"
 
 # SPECIAL BINDS - items with relevant bind string will only be bound in the specified conditions
-# Colour is ignored when checking for string. Case sensitive
+# Color is ignored when checking for string. Case-sensitive.
 
 # Binds when tool is used: used to break block, sword used to hit entity
 bindOnUse: false
@@ -22,6 +25,9 @@ disableEffects: false
 # Use %username% for player name placeholder
 displayLoreMsg: true
 loreMsg: "&9Soul bound to %username%"
+# Similarly for group binds, using placeholder %group%
+displayLoreMsgGroup: true
+loreMsgGroup: "&9Soul bound to group %group%"
 
 # Log player detected with item soul bound to another player in console
 consoleLogDetection: true
@@ -47,8 +53,11 @@ blockedCommands:
 # Messages | use '&' for color codes
 msgPrefix: "&8[&bSoul&3Bind&8]&r "
 denyMsg: "&9This item is soul bound to another player"
+denyMsgGroup: "&9This item is soul bound"
 detectedItemMessage: "&cAn item soul bound to another player was removed from your inventory. Event has been logged."
+detectedItemMessageGroup: "&cA soul bound item that you do not have access to has been detected in your inventory. Event has been logged."
 detectedItemBroadcast: "was detected with an item soul bound to another player."
+detectedItemBroadcastGroup: "was detected with a soul bound item they do not have access to."
 noPermissionGeneric: "&cInsufficient permissions."
 noPermissionBindOthers: "&cInsufficient permissions to bind for other players."
 bindSuccess: "&aSoul bind complete."
@@ -67,4 +76,4 @@ specialBindDone: "&aSpecial bind applied to item."
 cmdBlocked: "&cCannot perform this command on a soul bound item."
 # ======================
 
-configVersionDoNotModify: 1.4
+configVersionDoNotModify: 1.5

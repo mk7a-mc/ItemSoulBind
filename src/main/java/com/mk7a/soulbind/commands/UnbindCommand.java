@@ -53,14 +53,14 @@ public class UnbindCommand implements CommandExecutor {
 
         ItemStack item = player.getInventory().getItemInMainHand();
 
-        if (!BindUtil.hasOwner(item)) {
+        if (!BindUtil.hasBind(item)) {
             Util.sendMessage(player, config.unbindErrorNotBound);
             return true;
         }
 
         cleanLore(item);
 
-        ItemStack newItem = BindUtil.removeOwner(item);
+        ItemStack newItem = BindUtil.removeAnyOwner(item);
         player.getInventory().setItemInMainHand(newItem);
         player.sendMessage(config.prefix + config.unbindSuccess);
         player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
@@ -75,10 +75,11 @@ public class UnbindCommand implements CommandExecutor {
 
         List<String> lore = meta.getLore();
 
-        if (lore != null)  {
+        if (lore != null) {
 
             for (String line : lore) {
-                if (line.startsWith(config.loreMsgStart)) {
+                if (line.startsWith(config.loreMsg.split("%")[0])
+                        || line.startsWith(config.loreMsgGroup.split("%")[0])) {
                     lore.remove(line);
                     break;
                 }

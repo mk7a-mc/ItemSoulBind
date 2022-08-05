@@ -39,11 +39,9 @@ public class SpecialBindCommands implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player player)) {
             return false;
         }
-
-        Player player = (Player) sender;
 
         if (module.mainHandEmpty(player)) {
             Util.sendMessage(player, config.bindErrorHeldItem);
@@ -52,7 +50,7 @@ public class SpecialBindCommands implements CommandExecutor {
 
         ItemStack item = player.getInventory().getItemInMainHand();
 
-        if (BindUtil.hasOwner(item)) {
+        if (BindUtil.hasBind(item)) {
             Util.sendMessage(player, config.bindErrorAlreadyBound);
         }
 

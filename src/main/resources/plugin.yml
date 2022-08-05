@@ -1,7 +1,7 @@
 name: ItemSoulBind
 version: ${project.version}
 main: com.mk7a.soulbind.main.ItemSoulBindPlugin
-api-version: 1.17
+api-version: 1.18
 prefix: ItemSoulBind
 authors: [mk7a]
 description: Bind items for a single player's use only
@@ -15,6 +15,7 @@ permissions:
       itemsoulbind.bindall: true
       itemsoulbind.bind.others: true
       itemsoulbind.unbind: true
+      itemsoulbind.groupbinditem: true
       itemsoulbind.notify: true
       itemsoulbind.bindinvitems: true
       itemsoulbind.bypass: true
@@ -32,6 +33,9 @@ permissions:
       - itemsoulbind.bind
   itemsoulbind.unbind:
     description: Allows use of /unbindItem <player>
+    default: false
+  itemsoulbind.groupbinditem:
+    description: Allows use of /groupBindItem <permission>
     default: false
   itemsoulbind.notify:
     description: Notifies if player somehow has item soulbound to another player in their inventory
@@ -71,6 +75,9 @@ commands:
   unbindItem:
     description: Remove soul bind protection from item
     usage: /unbindItem <username>
+  groupBindItem:
+    description: Bind item to all players with permission itemsoulbind.group.<permission>
+    usage: /groupBindItem <permission>
   bindInvItems:
     description: Force check player's inventory and bind any items with the register string in the lore
     usage: /bindInvItems <username>

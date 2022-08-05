@@ -27,7 +27,12 @@ public final class DataContainerUtil {
 
         ItemMeta meta = itemStack.getItemMeta();
         PersistentDataContainer container = meta.getPersistentDataContainer();
-        return Optional.ofNullable(container.get(key, PersistentDataType.STRING));
+        String tag = container.get(key, PersistentDataType.STRING);
+        if (tag != null && tag.length() == 0) {
+            return Optional.empty();
+        } else {
+            return Optional.ofNullable(tag);
+        }
     }
 
     protected static ItemStack removeContainerTag(ItemStack itemStack, NamespacedKey key) {
