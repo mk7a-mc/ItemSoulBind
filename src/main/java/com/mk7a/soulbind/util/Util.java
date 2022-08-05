@@ -23,7 +23,7 @@ public final class Util {
 
 
     /**
-     * Do soul binding particle and sound effects on player, if feature not disabled in config.
+     * Do soul binding particle and sound effects on player, if enabled in config.
      *
      * @param player Target player
      */
@@ -48,7 +48,6 @@ public final class Util {
     public static void sendMessage(CommandSender target, String message) {
         target.sendMessage(ItemSoulBindPlugin.getPluginConfig().prefix + message);
     }
-
 
 
     public static boolean canIgnoreSoulBind(Player player) {

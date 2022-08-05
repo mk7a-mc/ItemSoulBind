@@ -24,22 +24,20 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 public class ItemRegistrationListener implements Listener {
 
-    private static final String USERNAME = "%username%";
-    private static final String GROUP = "%group%";
+    private static final String USERNAME_PLACEHOLDER = "%username%";
+    private static final String GROUP_PLACEHOLDER = "%group%";
     private static final String[] armors = {"HELMET", "CHESTPLATE", "LEGGINGS", "BOOTS"};
+    private static final String SWORD = "SWORD";
 
     private final ItemSoulBindPlugin plugin;
     private final PluginConfiguration config;
-    private final Pattern groupBindStringPattern;
 
     public ItemRegistrationListener(ItemSoulBindPlugin plugin) {
         this.plugin = plugin;
         config = ItemSoulBindPlugin.getPluginConfig();
-        groupBindStringPattern = Pattern.compile("(?<=" + config.registerString + "\\.group\\.)\\S*");
     }
 
     public void register() {
@@ -75,17 +73,17 @@ public class ItemRegistrationListener implements Listener {
 
         ItemStack clickedItem = event.getCurrentItem();
 
+        Optional<ItemStack> groupBindItem = bindIfContainsGroupString(player, clickedItem);
+        if (groupBindItem.isPresent()) {
+            event.setCurrentItem(groupBindItem.get());
+            event.setCancelled(true);
+            return;
+        }
         Optional<ItemStack> regItem = bindIfContainsString(player, clickedItem, config.registerString);
         if (regItem.isPresent()) {
             event.setCurrentItem(regItem.get());
             event.setCancelled(true);
         }
-        Optional<ItemStack> groupBindItem = bindIfContainsGroupString(player, clickedItem);
-        if (groupBindItem.isPresent()) {
-            event.setCurrentItem(groupBindItem.get());
-            event.setCancelled(true);
-        }
-
     }
 
 
@@ -101,7 +99,7 @@ public class ItemRegistrationListener implements Listener {
 
         Player player = event.getPlayer();
 
-        if(Util.canIgnoreSoulBind(player)) {
+        if (Util.canIgnoreSoulBind(player)) {
             return;
         }
 
@@ -149,7 +147,7 @@ public class ItemRegistrationListener implements Listener {
 
         ItemStack mainHand = player.getInventory().getItemInMainHand();
 
-        if (mainHand.getType().toString().contains("SWORD")) {
+        if (mainHand.getType().toString().contains(SWORD)) {
 
             bindIfContainsString(player, mainHand, config.bindOnUseString);
         }
@@ -221,23 +219,18 @@ public class ItemRegistrationListener implements Listener {
         ItemStack pickupItem = event.getItem().getItemStack();
 
 
-        Optional<ItemStack> normalPickupItem = bindIfContainsString(player, pickupItem, config.registerString);
-        if (normalPickupItem.isPresent()) {
-            event.getItem().setItemStack(normalPickupItem.get());
-            event.setCancelled(true);
-            return;
-        }
-        Optional<ItemStack> bindOnPickupItem = bindIfContainsString(player, pickupItem, config.bindOnPickupString);
-        if (bindOnPickupItem.isPresent()) {
-            event.getItem().setItemStack(bindOnPickupItem.get());
-            event.setCancelled(true);
-            return;
-        }
         Optional<ItemStack> groupBindItem = bindIfContainsGroupString(player, pickupItem);
         if (groupBindItem.isPresent()) {
             event.getItem().setItemStack(groupBindItem.get());
             event.setCancelled(true);
             return;
+        }
+
+        Optional<ItemStack> nonGroupPickupItem =
+                bindIfContainsString(player, pickupItem, config.registerString, config.bindOnPickupString);
+        if (nonGroupPickupItem.isPresent()) {
+            event.getItem().setItemStack(nonGroupPickupItem.get());
+            event.setCancelled(true);
         }
 
     }
@@ -254,39 +247,46 @@ public class ItemRegistrationListener implements Listener {
             return;
         }
 
-        ItemStack puItem = event.getItemDrop().getItemStack();
+        ItemStack droppedItem = event.getItemDrop().getItemStack();
 
-        Optional<ItemStack> regItem = bindIfContainsString(player, puItem, config.registerString);
-
-        regItem.ifPresent(itemStack -> {
-            event.getItemDrop().setItemStack(itemStack);
+        Optional<ItemStack> groupBindItem = bindIfContainsGroupString(player, droppedItem);
+        if (groupBindItem.isPresent()) {
+            event.getItemDrop().setItemStack(groupBindItem.get());
             event.setCancelled(true);
-        });
+            return;
+        }
 
+
+        Optional<ItemStack> nonGroupPickupItem = bindIfContainsString(player, droppedItem, config.registerString);
+        if (nonGroupPickupItem.isPresent()) {
+            event.getItemDrop().setItemStack(nonGroupPickupItem.get());
+            event.setCancelled(true);
+        }
 
     }
 
 
-    private Optional<ItemStack> bindIfContainsString(Player player, ItemStack item, String requiredString) {
-
-        String playerBind = ChatColor.stripColor(requiredString);
+    private Optional<ItemStack> bindIfContainsString(Player player, ItemStack item, String... requiredString) {
 
         if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
 
             ItemMeta meta = item.getItemMeta();
             List<String> lore = meta.getLore();
 
-            for (int i=0; i<lore.size(); i++) {
+            for (int loreLine = 0; loreLine < lore.size(); loreLine++) {
 
-                String lineText = ChatColor.stripColor(lore.get(i));
+                String lineText = ChatColor.stripColor(lore.get(loreLine));
 
-                if (lineText.contains(playerBind)) {
+                for (String reqStrOption : requiredString) {
+                    reqStrOption = ChatColor.stripColor(reqStrOption);
 
-                    ItemStack boundItem = doPlayerBind(player, item, i);
-                    item.setItemMeta(boundItem.getItemMeta());
-                    Util.bindEffect(player);
+                    if (lineText.contains(reqStrOption)) {
+                        ItemStack boundItem = applyLoreTriggeredBind(player, item, loreLine);
+                        item.setItemMeta(boundItem.getItemMeta());
+                        Util.bindEffect(player);
 
-                    return Optional.of(boundItem);
+                        return Optional.of(boundItem);
+                    }
                 }
             }
         }
@@ -300,24 +300,21 @@ public class ItemRegistrationListener implements Listener {
             ItemMeta meta = item.getItemMeta();
             List<String> lore = meta.getLore();
 
-            for (int i=0; i<lore.size(); i++) {
+            for (int i = 0; i < lore.size(); i++) {
 
                 String line = lore.get(i);
                 String lineText = ChatColor.stripColor(line);
 
-                if (lineText.matches(groupBindStringPattern.pattern())) {
+                String groupRegString = ChatColor.stripColor(config.groupRegisterString);
+                if (lineText.contains(groupRegString)) {
 
-                    var matcher = groupBindStringPattern.matcher(lineText);
-                    if (matcher.find()) {
-                        String permissionSuffix = matcher.group(0);
+                    String permissionSuffix = lineText.split(groupRegString)[1].split(" ")[0];
+                    ItemStack regItem = applyGroupBind(permissionSuffix, item, i);
 
-                        ItemStack regItem = doGroupBind(permissionSuffix, item, i);
+                    item.setItemMeta(regItem.getItemMeta());
+                    Util.bindEffect(player);
 
-                        item.setItemMeta(regItem.getItemMeta());
-                        Util.bindEffect(player);
-
-                        return Optional.of(regItem);
-                    }
+                    return Optional.of(regItem);
 
 
                 }
@@ -327,13 +324,13 @@ public class ItemRegistrationListener implements Listener {
     }
 
 
-    private ItemStack doPlayerBind(Player player, ItemStack item, int lineIndex) {
+    private ItemStack applyLoreTriggeredBind(Player player, ItemStack item, int lineIndex) {
 
         ItemMeta meta = item.getItemMeta();
         List<String> lore = meta.getLore();
 
         if (config.displayLore) {
-            lore.set(lineIndex, config.loreMsg.replaceAll(USERNAME, player.getName()));
+            lore.set(lineIndex, config.loreMsg.replaceAll(USERNAME_PLACEHOLDER, player.getName()));
         } else {
             lore.remove(lineIndex);
         }
@@ -344,13 +341,13 @@ public class ItemRegistrationListener implements Listener {
         return BindUtil.setPlayerOwner(item, player);
     }
 
-    private ItemStack doGroupBind(String permission, ItemStack item, int lineIndex) {
+    private ItemStack applyGroupBind(String permission, ItemStack item, int lineIndex) {
 
         ItemMeta meta = item.getItemMeta();
         List<String> lore = meta.getLore();
 
         if (config.displayLore) {
-            lore.set(lineIndex, config.loreMsg.replaceAll(GROUP, permission));
+            lore.set(lineIndex, config.loreMsgGroup.replaceAll(GROUP_PLACEHOLDER, permission));
         } else {
             lore.remove(lineIndex);
         }

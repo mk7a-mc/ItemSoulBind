@@ -2,7 +2,6 @@ package com.mk7a.soulbind.commands;
 
 import com.mk7a.soulbind.main.ItemSoulBindPlugin;
 import com.mk7a.soulbind.main.PluginConfiguration;
-import com.mk7a.soulbind.main.PluginPermissions;
 import com.mk7a.soulbind.util.BindUtil;
 import com.mk7a.soulbind.util.Util;
 import org.bukkit.Material;
@@ -90,16 +89,11 @@ public class CommandsModule {
             item.setItemMeta(meta);
         }
 
-        ItemStack soulBoundItem = BindUtil.setGroupOwner(item, formatCompleteGroupPerm(groupPerm));
+        ItemStack soulBoundItem = BindUtil.setGroupOwner(item, groupPerm);
         itemHolderPlayer.getInventory().setItem(itemHolderPlayer.getInventory().getHeldItemSlot(), soulBoundItem);
         Util.sendMessage(itemHolderPlayer, config.bindSuccess);
         Util.bindEffect(itemHolderPlayer);
     }
-
-    private String formatCompleteGroupPerm(String groupPerm) {
-        return PluginPermissions.GROUP_BIND_ROOT + groupPerm;
-    }
-
 
 
     protected Optional<Player> findPlayerFromName(String name) {

@@ -1,8 +1,9 @@
 # When player interacts with an item with the register string in its lore, item will be soul bound to them
 registerString: "%soulbind%"
-# INFO: Group Bind
-#   A register string of %soulbind% defined above and a group bind of itemsoulbind.group.<permission>
-#   will require a group bind string of the format %soulbind%.group.<permission>
+# Group bind string
+#   Place permission after this string, terminated by a space or end of line
+#   Example: %soulbindgroup%perm which will have permission itemsoulbind.group.perm
+groupRegisterString: "%soulbindgroup%"
 
 # SPECIAL BINDS - items with relevant bind string will only be bound in the specified conditions
 # Color is ignored when checking for string. Case-sensitive.

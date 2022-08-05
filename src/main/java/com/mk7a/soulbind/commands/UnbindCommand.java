@@ -75,7 +75,7 @@ public class UnbindCommand implements CommandExecutor {
 
         List<String> lore = meta.getLore();
 
-        if (lore != null)  {
+        if (lore != null) {
 
             for (String line : lore) {
                 if (line.startsWith(config.loreMsg.split("%")[0])

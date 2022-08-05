@@ -1,6 +1,7 @@
 package com.mk7a.soulbind.util;
 
 import com.mk7a.soulbind.listeners.Access;
+import com.mk7a.soulbind.main.PluginPermissions;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -17,17 +18,19 @@ public final class BindUtil {
 
     /**
      * Checks if item is soul bound to a player or group permission.
+     *
      * @param item Target item
      * @return boolean
      */
     public static boolean hasBind(ItemStack item) {
         return DataContainerUtil.readContainerTag(item, bindKey).isPresent()
-                    || DataContainerUtil.readContainerTag(item, groupBindKey).isPresent();
+                || DataContainerUtil.readContainerTag(item, groupBindKey).isPresent();
     }
 
     /**
      * Checks for player access to an item.
-     * @param item Target item
+     *
+     * @param item   Target item
      * @param player Target player
      * @return boolean
      */
@@ -59,7 +62,7 @@ public final class BindUtil {
         return DataContainerUtil.readContainerTag(item, bindKey).isPresent();
     }
 
-    public static String getPlayerOwner(ItemStack item)  {
+    public static String getPlayerOwner(ItemStack item) {
         return DataContainerUtil.readContainerTag(item, bindKey).get();
     }
 
@@ -79,7 +82,7 @@ public final class BindUtil {
 
     public static ItemStack setGroupOwner(ItemStack item, String groupPermission) {
 
-        return DataContainerUtil.writeContainerTag(item, groupPermission, groupBindKey);
+        return DataContainerUtil.writeContainerTag(item, formatCompleteGroupPerm(groupPermission), groupBindKey);
     }
 
 
@@ -87,6 +90,10 @@ public final class BindUtil {
 
         item = DataContainerUtil.removeContainerTag(item, bindKey);
         return DataContainerUtil.removeContainerTag(item, groupBindKey);
+    }
+
+    private static String formatCompleteGroupPerm(String groupPerm) {
+        return PluginPermissions.GROUP_BIND_ROOT + groupPerm;
     }
 
 }

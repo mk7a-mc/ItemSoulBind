@@ -10,6 +10,7 @@ public class PluginConfiguration {
 
     public String prefix;
     public String registerString;
+    public String groupRegisterString;
     public String loreMsg;
     public String loreMsgGroup;
     public String denyMsg;
@@ -66,6 +67,7 @@ public class PluginConfiguration {
         FileConfiguration config = plugin.getConfig();
 
         registerString = config.getString("registerString");
+        groupRegisterString = config.getString("groupRegisterString");
         displayLore = config.getBoolean("displayLoreMsg");
         displayLoreGroup = config.getBoolean("displayLoreMsgGroup");
         loreMsg = color(config.getString("loreMsg"));
