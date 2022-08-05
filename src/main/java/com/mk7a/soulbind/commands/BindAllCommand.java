@@ -3,6 +3,7 @@ package com.mk7a.soulbind.commands;
 import com.mk7a.soulbind.main.ItemSoulBindPlugin;
 import com.mk7a.soulbind.main.PluginConfiguration;
 import com.mk7a.soulbind.main.PluginPermissions;
+import com.mk7a.soulbind.util.BindUtil;
 import com.mk7a.soulbind.util.Util;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -42,7 +43,7 @@ public class BindAllCommand implements CommandExecutor {
 
         for (ItemStack item : invContents) {
 
-            if (item == null) {
+            if (item == null || BindUtil.hasBind(item)) {
                 continue;
             }
 
