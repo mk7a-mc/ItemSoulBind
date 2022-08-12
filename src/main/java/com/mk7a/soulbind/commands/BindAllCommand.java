@@ -2,7 +2,6 @@ package com.mk7a.soulbind.commands;
 
 import com.mk7a.soulbind.main.ItemSoulBindPlugin;
 import com.mk7a.soulbind.main.PluginConfiguration;
-import com.mk7a.soulbind.main.PluginPermissions;
 import com.mk7a.soulbind.util.BindUtil;
 import com.mk7a.soulbind.util.Util;
 import org.bukkit.command.Command;
@@ -32,11 +31,6 @@ public class BindAllCommand implements CommandExecutor {
 
         if (!(sender instanceof Player player)) {
             return false;
-        }
-
-        if (!player.hasPermission(PluginPermissions.RETURN_BIND_ALL)) {
-            Util.sendMessage(player, config.noPermissionGeneric);
-            return true;
         }
 
         ItemStack[] invContents = player.getInventory().getContents();

@@ -38,11 +38,6 @@ public class BindCommand implements CommandExecutor {
             return false;
         }
 
-        if (!player.hasPermission(PluginPermissions.BIND)) {
-            Util.sendMessage(player, config.noPermissionGeneric);
-            return true;
-        }
-
         if (module.mainHandEmpty(player)) {
             Util.sendMessage(player, config.bindErrorHeldItem);
             return true;

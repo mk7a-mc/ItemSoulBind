@@ -2,7 +2,6 @@ package com.mk7a.soulbind.commands;
 
 import com.mk7a.soulbind.main.ItemSoulBindPlugin;
 import com.mk7a.soulbind.main.PluginConfiguration;
-import com.mk7a.soulbind.main.PluginPermissions;
 import com.mk7a.soulbind.util.BindUtil;
 import com.mk7a.soulbind.util.Util;
 import org.bukkit.command.Command;
@@ -35,11 +34,6 @@ public class BindInvItemsCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-
-        if (!sender.hasPermission(PluginPermissions.BIND_INV_ITEMS)) {
-            Util.sendMessage(sender, config.noPermissionGeneric);
-            return true;
-        }
 
         if (args.length != 1) {
             return false;

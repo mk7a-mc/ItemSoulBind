@@ -2,7 +2,6 @@ package com.mk7a.soulbind.commands;
 
 import com.mk7a.soulbind.main.ItemSoulBindPlugin;
 import com.mk7a.soulbind.main.PluginConfiguration;
-import com.mk7a.soulbind.main.PluginPermissions;
 import com.mk7a.soulbind.util.BindUtil;
 import com.mk7a.soulbind.util.Util;
 import org.bukkit.Sound;
@@ -38,12 +37,6 @@ public class UnbindCommand implements CommandExecutor {
 
         if (!(sender instanceof Player player)) {
             return false;
-        }
-
-
-        if (!player.hasPermission(PluginPermissions.UNBIND)) {
-            Util.sendMessage(player, config.noPermissionGeneric);
-            return true;
         }
 
         if (module.mainHandEmpty(player)) {
@@ -89,6 +82,4 @@ public class UnbindCommand implements CommandExecutor {
             item.setItemMeta(meta);
         }
     }
-
-
 }
