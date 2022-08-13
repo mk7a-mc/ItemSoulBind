@@ -2,16 +2,14 @@ package com.mk7a.soulbind.commands;
 
 import com.mk7a.soulbind.main.ItemSoulBindPlugin;
 import com.mk7a.soulbind.main.PluginConfiguration;
-import com.mk7a.soulbind.util.BindUtil;
+import com.mk7a.soulbind.util.BindStringUtil;
 import com.mk7a.soulbind.util.Util;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.List;
 import java.util.Optional;
 
 public class BindInvItemsCommand implements CommandExecutor {
@@ -49,47 +47,34 @@ public class BindInvItemsCommand implements CommandExecutor {
 
         Player targetPlayer = getTargetPlayer.get();
         ItemStack[] invContents = targetPlayer.getInventory().getContents();
+        int bindCounter = 0;
 
         for (int i = 0; i < invContents.length; i++) {
 
-            if (!isBindCandidate(invContents[i])) {
+            if (invContents[i] == null) {
+                continue;
+            }
+            ItemStack item = invContents[i];
+
+            Optional<ItemStack> groupBindItem = BindStringUtil.bindIfContainsGroupString(targetPlayer, item);
+            if (groupBindItem.isPresent()) {
+                invContents[i] = groupBindItem.get();
+                bindCounter++;
                 continue;
             }
 
-            ItemStack currentItem = invContents[i];
-            ItemMeta meta = currentItem.getItemMeta();
-            List<String> lore = meta.getLore();
-
-            for (String line : lore) {
-
-                if (line.contains(config.registerString)) {
-
-                    lore.remove(line);
-
-                    if (config.displayLore) {
-                        lore.add(config.loreMsg.replaceAll(CommandsModule.USERNAME_PLACEHOLDER, targetPlayer.getName()));
-                    }
-
-                    meta.setLore(lore);
-                    currentItem.setItemMeta(meta);
-                    ItemStack regItem = BindUtil.setPlayerOwner(currentItem, targetPlayer);
-
-                    invContents[i] = regItem;
-                    break;
-                }
+            Optional<ItemStack> nonGroupPickupItem = BindStringUtil.bindIfContainsString(
+                    targetPlayer, item, config.registerString, config.bindOnPickupString);
+            if (nonGroupPickupItem.isPresent()) {
+                invContents[i] = nonGroupPickupItem.get();
+                bindCounter++;
             }
 
         }
 
-        Util.sendMessage(sender, config.inventoryProcessSuccess + targetPlayerName);
+        Util.sendMessage(sender, config.inventoryProcessSuccess + targetPlayerName + String.format(" (%d)", bindCounter));
 
         return true;
     }
-
-
-    private boolean isBindCandidate(ItemStack item) {
-        return item != null && item.hasItemMeta() && item.getItemMeta().hasLore();
-    }
-
 
 }
