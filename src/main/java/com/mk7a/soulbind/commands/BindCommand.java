@@ -61,7 +61,7 @@ public class BindCommand implements CommandExecutor {
 
         } else if (bindToPlayer) {
 
-            Optional<Player> targetPlayer = module.findPlayerFromName(args[0]);
+            Optional<Player> targetPlayer = module.findOnlinePlayerFromName(args[0]);
 
             if (targetPlayer.isEmpty()) {
                 Util.sendMessage(player, config.bindErrorNoSuchPlayer);

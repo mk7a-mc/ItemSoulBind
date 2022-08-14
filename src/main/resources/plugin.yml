@@ -16,6 +16,7 @@ permissions:
       itemsoulbind.bind.others: true
       itemsoulbind.unbind: true
       itemsoulbind.groupbinditem: true
+      itemsoulbind.remotebind: true
       itemsoulbind.notify: true
       itemsoulbind.bindinvitems: true
       itemsoulbind.bypass: true
@@ -36,6 +37,9 @@ permissions:
     default: false
   itemsoulbind.groupbinditem:
     description: Allows use of /groupBindItem <permission>
+    default: false
+  itemsoulbind.remotebind:
+    description: Allows use of /remoteBindItem <player>
     default: false
   itemsoulbind.notify:
     description: Notifies if player somehow has item soulbound to another player in their inventory
@@ -82,8 +86,12 @@ commands:
     description: Bind item to all players with permission itemsoulbind.group.<permission>
     usage: /groupBindItem <permission>
     permission: itemsoulbind.groupbinditem
+  remoteBindItem:
+    description: Remotely bind an item in a player's inventory
+    usage: /remoteBindItem <player> slot|0-40|all
+    permission: itemsoulbind.remotebind
   bindInvItems:
-    description: Force check player's inventory and bind any items with the register string in the lore
+    description: Scan player's inventory and bind any items with the register string in the lore
     usage: /bindInvItems <username>
     permission: itemsoulbind.bindinvitems
   returnItems:

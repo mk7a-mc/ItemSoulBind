@@ -21,6 +21,7 @@ public class CommandsModule {
     protected static final String GROUP_BIND_ITEM = "groupBindItem";
     protected static final String UNBIND_ITEM = "unbindItem";
     protected static final String BIND_INV_ITEMS = "bindInvItems";
+    protected static final String REMOTE_BIND = "remoteBindItem";
     protected static final String BIND_ON_USE = "bindOnUse";
     protected static final String BIND_ON_EQUIP = "bindOnEquip";
     protected static final String BIND_ON_PICKUP = "bindOnPickup";
@@ -45,8 +46,21 @@ public class CommandsModule {
         new UnbindCommand(plugin, this).register();
         new BindAllCommand(plugin, this).register();
         new GroupBindCommand(plugin, this).register();
+        new RemoteBindCommand(plugin, this).register();
     }
 
+    protected void bindAllInvItems(Player player) {
+        ItemStack[] invContents = player.getInventory().getContents();
+
+        for (ItemStack item : invContents) {
+
+            if (item == null || BindUtil.hasBind(item)) {
+                continue;
+            }
+
+            bindItemToPlayer(item, player, player, false);
+        }
+    }
 
     protected void bindItemToPlayer(ItemStack item, Player targetPlayer, Player itemHolderPlayer, boolean sendBindMsg) {
 
@@ -64,8 +78,8 @@ public class CommandsModule {
             item.setItemMeta(meta);
         }
 
-        ItemStack soulBoundItem = BindUtil.setPlayerOwner(item, targetPlayer);
-        itemHolderPlayer.getInventory().setItem(itemHolderPlayer.getInventory().getHeldItemSlot(), soulBoundItem);
+        BindUtil.setPlayerOwner(item, targetPlayer);
+
         if (sendBindMsg) {
             Util.sendMessage(itemHolderPlayer, config.bindSuccess);
         }
@@ -96,14 +110,13 @@ public class CommandsModule {
     }
 
 
-    protected Optional<Player> findPlayerFromName(String name) {
+    protected Optional<Player> findOnlinePlayerFromName(String name) {
 
-        for (Player player : plugin.getServer().getOnlinePlayers()) {
-            if (player.getName().equalsIgnoreCase(name)) {
-                return Optional.of(player);
-            }
-        }
-        return Optional.empty();
+        return Optional.ofNullable(
+                plugin.getServer().getOnlinePlayers().stream()
+                        .filter(player -> player.getName().equalsIgnoreCase(name))
+                        .findFirst()
+                        .orElse(null));
     }
 
     protected boolean mainHandEmpty(Player player) {

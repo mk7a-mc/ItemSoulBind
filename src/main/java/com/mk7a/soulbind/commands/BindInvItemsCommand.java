@@ -38,7 +38,7 @@ public class BindInvItemsCommand implements CommandExecutor {
         }
 
         String targetPlayerName = args[0];
-        Optional<Player> getTargetPlayer = module.findPlayerFromName(targetPlayerName);
+        Optional<Player> getTargetPlayer = module.findOnlinePlayerFromName(targetPlayerName);
 
         if (getTargetPlayer.isEmpty()) {
             Util.sendMessage(sender, config.bindErrorNoSuchPlayer);
