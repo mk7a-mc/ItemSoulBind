@@ -25,6 +25,7 @@ public class PluginConfiguration {
     public String bindErrorHeldItem;
     public String bindErrorAlreadyBound;
     public String bindErrorNoSuchPlayer;
+    public String bindErrorRemoteNoItem;
     public String unbindErrorNotBound;
     public String unbindSuccess;
     public String inventoryProcessSuccess;
@@ -96,6 +97,7 @@ public class PluginConfiguration {
         bindErrorHeldItem = color(config.getString("bindErrorHeldItem"));
         bindErrorAlreadyBound = color(config.getString("bindErrorAlreadyBound"));
         bindErrorNoSuchPlayer = color(config.getString("bindErrorNoSuchPlayer"));
+        bindErrorRemoteNoItem = color(config.getString("bindErrorRemoteNoItem"));
         unbindErrorNotBound = color(config.getString("unbindErrorNotBound"));
         unbindSuccess = color(config.getString("unbindSuccess"));
         inventoryProcessSuccess = color(config.getString("inventoryProcessSuccess"));

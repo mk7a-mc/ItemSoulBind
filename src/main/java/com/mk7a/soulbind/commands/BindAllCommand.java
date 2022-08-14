@@ -2,13 +2,11 @@ package com.mk7a.soulbind.commands;
 
 import com.mk7a.soulbind.main.ItemSoulBindPlugin;
 import com.mk7a.soulbind.main.PluginConfiguration;
-import com.mk7a.soulbind.util.BindUtil;
 import com.mk7a.soulbind.util.Util;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 public class BindAllCommand implements CommandExecutor {
 
@@ -33,16 +31,7 @@ public class BindAllCommand implements CommandExecutor {
             return false;
         }
 
-        ItemStack[] invContents = player.getInventory().getContents();
-
-        for (ItemStack item : invContents) {
-
-            if (item == null || BindUtil.hasBind(item)) {
-                continue;
-            }
-
-            module.bindItemToPlayer(item, player, player, false);
-        }
+        module.bindAllInvItems(player);
 
         Util.sendMessage(player, config.bindSuccess);
 

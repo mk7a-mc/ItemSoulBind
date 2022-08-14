@@ -25,7 +25,7 @@ public final class ItemSoulBindPlugin extends JavaPlugin {
     public NamespacedKey bindKey = new NamespacedKey(this, "SoulBindUUID");
     public NamespacedKey groupBindKey = new NamespacedKey(this, "SoulBindGroup");
 
-    private static final double CONFIG_VER = 1.5;
+    private static final double CONFIG_VER = 1.6;
     private static final String VERSION_PATH = "configVersionDoNotModify";
 
     private static PluginConfiguration pluginConfig;

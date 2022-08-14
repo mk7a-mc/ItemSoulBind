@@ -64,6 +64,7 @@ bindSuccess: "&aSoul bind complete."
 bindErrorHeldItem: "You must be holding an item in your main hand."
 bindErrorAlreadyBound: "This item is already soul bound."
 bindErrorNoSuchPlayer: "No such player found online."
+bindErrorRemoteNoItem: "Specific target player inventory slot is empty."
 unbindErrorNotBound: "Item is not soul bound."
 unbindSuccess: "&aSoul bind removed."
 inventoryProcessSuccess: "&aProcessed inventory of "
@@ -76,4 +77,4 @@ specialBindDone: "&aSpecial bind applied to item."
 cmdBlocked: "&cCannot perform this command on a soul bound item."
 # ======================
 
-configVersionDoNotModify: 1.5
+configVersionDoNotModify: 1.6
