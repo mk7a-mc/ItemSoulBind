@@ -60,8 +60,10 @@ public class ItemReturnListener implements Listener {
     public void onQuit(PlayerQuitEvent event) {
 
         UUID uuid = event.getPlayer().getUniqueId();
-        playerTasks.get(uuid).cancel();
-        playerTasks.remove(uuid);
+        if (playerTasks.containsKey(uuid)) {
+            playerTasks.get(uuid).cancel();
+            playerTasks.remove(uuid);
+        }
     }
 
     protected void refreshPlayers() {
