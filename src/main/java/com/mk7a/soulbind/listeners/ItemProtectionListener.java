@@ -146,12 +146,20 @@ public class ItemProtectionListener implements Listener {
     @EventHandler
     public void onPlace(BlockPlaceEvent event) {
 
-        if (config.preventPlacing) {
-            ItemStack placedItem = event.getItemInHand();
-            if (BindUtil.hasBind(placedItem)) {
-                event.setCancelled(true);
-            }
+        if (!config.preventPlacing) {
+            return;
         }
+
+        ItemStack handItem = event.getItemInHand();
+
+        if (!handItem.getType().isBlock()) {
+            return;
+        }
+
+        if (BindUtil.hasBind(handItem)) {
+            event.setCancelled(true);
+        }
+
     }
 
     @EventHandler
