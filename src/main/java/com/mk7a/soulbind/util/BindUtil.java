@@ -6,6 +6,8 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.UUID;
+
 public final class BindUtil {
 
     private static NamespacedKey bindKey;
@@ -76,7 +78,11 @@ public final class BindUtil {
 
     public static ItemStack setPlayerOwner(ItemStack item, Player player) {
 
-        String UUID = player.getUniqueId().toString();
+        return setPlayerOwner(item, player.getUniqueId());
+    }
+
+    public static ItemStack setPlayerOwner(ItemStack item, UUID uuid) {
+        String UUID = uuid.toString();
         return DataContainerUtil.writeContainerTag(item, UUID, bindKey);
     }
 
