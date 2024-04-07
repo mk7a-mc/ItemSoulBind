@@ -89,8 +89,11 @@ public class ItemProtectionListener implements Listener {
         }
     }
 
+    /**
+     * Extract soul bound items early in death event
+     */
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onDeath(PlayerDeathEvent event) {
+    public void onDeathEarly(PlayerDeathEvent event) {
 
         if (!event.getKeepInventory() && event.getEntity().hasPermission(PluginPermissions.KEEP_ON_DEATH)) {
 
@@ -105,11 +108,23 @@ public class ItemProtectionListener implements Listener {
                 }
             }
 
-            if (boundItemsInPosition.keySet().size() > 0) {
+            if (!boundItemsInPosition.keySet().isEmpty()) {
                 event.getDrops().removeAll(boundItemsInPosition.values());
                 deathItems.put(event.getEntity().getUniqueId(), boundItemsInPosition);
             }
 
+        }
+    }
+
+    /**
+     * Final check to ensure other plugins have not enabled keep inventory. If they have,
+     * cancel replacement of soul bound items by removing from deathItems.
+     */
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onDeathLate(PlayerDeathEvent event) {
+        var uuid = event.getEntity().getUniqueId();
+        if (event.getKeepInventory()) {
+            deathItems.remove(uuid);
         }
     }
 
