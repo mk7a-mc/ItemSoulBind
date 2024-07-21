@@ -13,6 +13,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -20,6 +21,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Optional;
 
 public class ItemRegistrationListener implements Listener {
@@ -65,6 +67,27 @@ public class ItemRegistrationListener implements Listener {
 
         if (event.getCurrentItem() == null) {
             return;
+        }
+
+        if (event.getClick().equals(ClickType.NUMBER_KEY)) {
+
+            var hotbarSlot = event.getHotbarButton();
+            var hotbarItem = player.getInventory().getItem(hotbarSlot);
+
+            if (Objects.nonNull(hotbarItem)) {
+
+                Optional<ItemStack> groupBindItem = BindStringUtil.bindIfContainsGroupString(player, hotbarItem);
+                if (groupBindItem.isPresent()) {
+                    player.getInventory().setItem(hotbarSlot, groupBindItem.get());
+                    event.setCancelled(true);
+                } else {
+                    Optional<ItemStack> regItem = BindStringUtil.bindIfContainsString(player, hotbarItem, config.registerString);
+                    if (regItem.isPresent()) {
+                        player.getInventory().setItem(hotbarSlot, regItem.get());
+                        event.setCancelled(true);
+                    }
+                }
+            }
         }
 
         ItemStack clickedItem = event.getCurrentItem();
