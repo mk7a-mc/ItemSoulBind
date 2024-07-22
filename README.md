@@ -1,5 +1,5 @@
 # ItemSoulBind
-Spigot Plugin - Bind items to a player or group.
+Spigot Plugin - Bind items to individual players or groups for exclusive use and various protections. Use commands or integrate into your kits and quests for seamless game design.
 
 Spigot - https://www.spigotmc.org/resources/itemsoulbind.64541/ 
 
