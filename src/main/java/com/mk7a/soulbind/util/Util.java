@@ -31,7 +31,7 @@ public final class Util {
 
         if (!ItemSoulBindPlugin.getPluginConfig().disableEffects) {
 
-            player.getWorld().spawnParticle(Particle.SPELL_WITCH,
+            player.getWorld().spawnParticle(Particle.WITCH,
                     player.getLocation().add(0, 1, 0), 30, 0.5, 0.5, 0.5);
 
             player.playSound(player.getLocation(), Sound.ENTITY_ILLUSIONER_PREPARE_MIRROR, 1, 2);
