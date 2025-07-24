@@ -10,32 +10,32 @@ import java.util.Optional;
 
 public final class DataContainerUtil {
 
-    protected static ItemStack writeContainerTag(ItemStack itemStack, String data, NamespacedKey key) {
+    static ItemStack writeContainerTag(ItemStack itemStack, String data, NamespacedKey key) {
 
         ItemMeta meta = itemStack.getItemMeta();
         itemStack.setItemMeta(writeContainerTag(meta, data, key));
         return itemStack;
     }
 
-    protected static ItemMeta writeContainerTag(ItemMeta meta, String data, NamespacedKey key) {
+    private static ItemMeta writeContainerTag(ItemMeta meta, String data, NamespacedKey key) {
 
         meta.getPersistentDataContainer().set(key, PersistentDataType.STRING, data);
         return meta;
     }
 
-    protected static Optional<String> readContainerTag(ItemStack itemStack, NamespacedKey key) {
+    static Optional<String> readContainerTag(ItemStack itemStack, NamespacedKey key) {
 
         ItemMeta meta = itemStack.getItemMeta();
         PersistentDataContainer container = meta.getPersistentDataContainer();
         String tag = container.get(key, PersistentDataType.STRING);
-        if (tag != null && tag.length() == 0) {
+        if (tag != null && tag.isEmpty()) {
             return Optional.empty();
         } else {
             return Optional.ofNullable(tag);
         }
     }
 
-    protected static ItemStack removeContainerTag(ItemStack itemStack, NamespacedKey key) {
+    static ItemStack removeContainerTag(ItemStack itemStack, NamespacedKey key) {
 
         ItemMeta meta = itemStack.getItemMeta();
         meta.getPersistentDataContainer().remove(key);

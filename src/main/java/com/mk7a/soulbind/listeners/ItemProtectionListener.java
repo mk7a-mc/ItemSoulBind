@@ -108,7 +108,7 @@ public class ItemProtectionListener implements Listener {
                 }
             }
 
-            if (!boundItemsInPosition.keySet().isEmpty()) {
+            if (!boundItemsInPosition.isEmpty()) {
                 event.getDrops().removeAll(boundItemsInPosition.values());
                 deathItems.put(event.getEntity().getUniqueId(), boundItemsInPosition);
             }
