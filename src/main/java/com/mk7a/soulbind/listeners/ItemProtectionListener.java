@@ -70,7 +70,7 @@ public class ItemProtectionListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void onPickUp(EntityPickupItemEvent event) {
 
         if (event.getEntity() instanceof Player player) {
