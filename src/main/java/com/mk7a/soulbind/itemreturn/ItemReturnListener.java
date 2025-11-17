@@ -6,6 +6,7 @@ import com.mk7a.soulbind.main.PluginConfiguration;
 import com.mk7a.soulbind.main.PluginPermissions;
 import com.mk7a.soulbind.util.BindUtil;
 import com.mk7a.soulbind.util.Util;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -73,6 +74,42 @@ public class ItemReturnListener implements Listener {
         }
     }
 
+    private void handleItemReturn(Player sourcePlayer, ItemStack checkedItem, Access accessLevel) {
+
+        String playerNotifyString;
+        String adminNotifyString;
+
+        if (accessLevel == Access.DENY_PLAYER) {
+
+            String itemOwnerUUID = BindUtil.getPlayerOwner(checkedItem);
+            foundItems.putIfAbsent(itemOwnerUUID, new ArrayList<>());
+            ArrayList<ItemStack> foundItemsList = foundItems.get(itemOwnerUUID);
+            foundItemsList.add(checkedItem);
+            sourcePlayer.playSound(sourcePlayer.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 1F, 1F);
+
+            adminNotifyString = Util.color(String.format("&c(%s) %s", sourcePlayer.getName(), config.detectedItemBroadcast));
+            playerNotifyString = config.detectedItemMessage;
+
+
+        } else { // Access.DENY_GROUP
+
+            adminNotifyString = Util.color(String.format("&c(%s) %s", sourcePlayer.getName(), config.detectedItemBroadcastGroup));
+            playerNotifyString = config.detectedItemMessageGroup;
+        }
+
+        Util.sendMessage(sourcePlayer, playerNotifyString);
+
+        if (config.consoleLogDetection) {
+            plugin.getLogger().info(adminNotifyString);
+        }
+
+        for (Player onlinePlayer : plugin.getServer().getOnlinePlayers()) {
+            if (onlinePlayer.hasPermission(PluginPermissions.NOTIFY)) {
+                onlinePlayer.sendMessage(adminNotifyString);
+            }
+        }
+    }
+
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void invClickReturn(InventoryClickEvent event) {
@@ -91,53 +128,46 @@ public class ItemReturnListener implements Listener {
             return;
         }
 
-        if (event.getCurrentItem() != null && event.getCurrentItem().hasItemMeta()
+        var clickedOnItem = event.getCurrentItem() != null && event.getCurrentItem().hasItemMeta();
+        var clickedWithItem = event.getCursor() != null && event.getCursor().hasItemMeta();
+
+        if ((clickedOnItem || clickedWithItem)
                 && event.getClickedInventory() != null && event.getClickedInventory().getHolder() != null) {
 
-            ItemStack clickedItem = event.getCurrentItem();
-            boolean clickInsideOwnInventory = event.getClickedInventory().getHolder().equals(player);
-            Access accessLevel = BindUtil.getAccessLevel(clickedItem, player);
+            ItemStack checkedItem;
+            if (clickedOnItem) {
+                checkedItem  = event.getCurrentItem();
+            } else { //clickedWithItem
+                checkedItem = event.getCursor();
+            }
+
+            var clickInsideOwnInventory = event.getClickedInventory().getHolder().equals(player);
+            Access accessLevel = BindUtil.getAccessLevel(checkedItem, player);
 
             if (accessLevel != Access.ALLOW && clickInsideOwnInventory) {
 
-                event.setCancelled(true);
+                if (clickedWithItem) {
+                    // Remove and return item on next tick
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        var inventory = player.getInventory();
+                        for (int i = 0; i < inventory.getSize(); i++) {
+                            ItemStack item = inventory.getItem(i);
+                            if (item != null && item.hasItemMeta()) {
+                                var access = BindUtil.getAccessLevel(item, player);
+                                if (access != Access.ALLOW) {
+                                    inventory.setItem(i, new ItemStack(Material.AIR));
+                                    handleItemReturn(player, item, access);
+                                }
+                            }
+                        }
+                    });
 
-                String playerNotifyString;
-                String adminNotifyString;
-
-
-                // If player bound, return item to player
-                if (accessLevel == Access.DENY_PLAYER) {
-
+                } else { // ClickedOnItem
+                    // Cancel event, immediately remove and return item
+                    event.setCancelled(true);
                     player.getInventory().setItem(event.getSlot(), new ItemStack(Material.AIR));
-                    String itemOwnerUUID = BindUtil.getPlayerOwner(clickedItem);
-                    foundItems.putIfAbsent(itemOwnerUUID, new ArrayList<>());
-                    ArrayList<ItemStack> foundItemsList = foundItems.get(itemOwnerUUID);
-                    foundItemsList.add(clickedItem);
-                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 1F, 1F);
-
-                    adminNotifyString = Util.color(String.format("&c(%s) %s", player.getName(), config.detectedItemBroadcast));
-                    playerNotifyString = config.detectedItemMessage;
-
-
-                } else {
-
-                    adminNotifyString = Util.color(String.format("&c(%s) %s", player.getName(), config.detectedItemBroadcastGroup));
-                    playerNotifyString = config.detectedItemMessageGroup;
+                    handleItemReturn(player, checkedItem, accessLevel);
                 }
-
-                Util.sendMessage(player, playerNotifyString);
-
-                if (config.consoleLogDetection) {
-                    plugin.getLogger().info(adminNotifyString);
-                }
-
-                for (Player onlinePlayer : plugin.getServer().getOnlinePlayers()) {
-                    if (onlinePlayer.hasPermission(PluginPermissions.NOTIFY)) {
-                        onlinePlayer.sendMessage(adminNotifyString);
-                    }
-                }
-
             }
         }
     }
