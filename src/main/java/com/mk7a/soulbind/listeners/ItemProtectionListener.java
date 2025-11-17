@@ -50,8 +50,7 @@ public class ItemProtectionListener implements Listener {
             }
 
             if (event.getCurrentItem() != null && event.getCurrentItem().hasItemMeta()
-                    && event.getClickedInventory() != null && event.getClickedInventory().getHolder() != null
-                    && !event.getClickedInventory().getHolder().equals(player)) {
+                    && (event.getClickedInventory() == null || event.getClickedInventory().getHolder() != event.getWhoClicked())) {
 
                 ItemStack clickedItem = event.getCurrentItem();
                 Access access = BindUtil.getAccessLevel(clickedItem, player);
@@ -100,7 +99,7 @@ public class ItemProtectionListener implements Listener {
             Map<Integer, ItemStack> boundItemsInPosition = new HashMap<>();
             ItemStack[] inventory = event.getEntity().getInventory().getContents();
 
-            for (int i=0; i < inventory.length; i++) {
+            for (int i = 0; i < inventory.length; i++) {
                 ItemStack item = inventory[i];
 
                 if (item != null && BindUtil.hasBind(item)) {
