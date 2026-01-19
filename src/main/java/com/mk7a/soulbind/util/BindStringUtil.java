@@ -86,7 +86,7 @@ public final class BindStringUtil {
 
         item.setItemMeta(meta);
 
-        return BindUtil.setPlayerOwner(item, player);
+        return BindUtil.setPlayerOwner(item, player.getUniqueId());
     }
 
     private static ItemStack applyGroupBind(String permission, ItemStack item, int lineIndex) {

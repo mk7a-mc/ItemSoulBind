@@ -17,7 +17,7 @@ public final class DataContainerUtil {
         return itemStack;
     }
 
-    private static ItemMeta writeContainerTag(ItemMeta meta, String data, NamespacedKey key) {
+    public static ItemMeta writeContainerTag(ItemMeta meta, String data, NamespacedKey key) {
 
         meta.getPersistentDataContainer().set(key, PersistentDataType.STRING, data);
         return meta;

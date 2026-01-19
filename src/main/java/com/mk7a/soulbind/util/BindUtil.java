@@ -5,6 +5,7 @@ import com.mk7a.soulbind.main.PluginPermissions;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.UUID;
 
@@ -76,14 +77,14 @@ public final class BindUtil {
         return DataContainerUtil.readContainerTag(item, groupBindKey).get();
     }
 
-    public static ItemStack setPlayerOwner(ItemStack item, Player player) {
-
-        return setPlayerOwner(item, player.getUniqueId());
-    }
-
     public static ItemStack setPlayerOwner(ItemStack item, UUID uuid) {
         String UUID = uuid.toString();
         return DataContainerUtil.writeContainerTag(item, UUID, bindKey);
+    }
+
+    public static ItemMeta setPlayerOwner(ItemMeta itemMeta, UUID uuid) {
+        String UUID = uuid.toString();
+        return  DataContainerUtil.writeContainerTag(itemMeta, UUID, bindKey);
     }
 
     public static ItemStack setGroupOwner(ItemStack item, String groupPermission) {

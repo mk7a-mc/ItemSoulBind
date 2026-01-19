@@ -64,9 +64,10 @@ public class CommandsModule {
 
     protected void bindItemToPlayer(ItemStack item, Player targetPlayer, Player itemHolderPlayer, boolean sendBindMsg) {
 
+        ItemMeta meta = item.getItemMeta();
+
         if (config.displayLore) {
 
-            ItemMeta meta = item.getItemMeta();
             ArrayList<String> newLore = new ArrayList<>();
 
             if (meta.hasLore()) {
@@ -75,10 +76,11 @@ public class CommandsModule {
 
             newLore.add(config.loreMsg.replaceAll(CommandsModule.USERNAME_PLACEHOLDER, targetPlayer.getName()));
             meta.setLore(newLore);
-            item.setItemMeta(meta);
+
         }
 
-        BindUtil.setPlayerOwner(item, targetPlayer);
+        meta = BindUtil.setPlayerOwner(meta, targetPlayer.getUniqueId());
+        item.setItemMeta(meta);
 
         if (sendBindMsg) {
             Util.sendMessage(itemHolderPlayer, config.bindSuccess);
