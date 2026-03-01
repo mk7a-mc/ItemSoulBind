@@ -1,5 +1,5 @@
 name: ItemSoulBind
-version: ${project.version}
+version: ${version}
 main: com.mk7a.soulbind.main.ItemSoulBindPlugin
 api-version: 1.18
 prefix: ItemSoulBind
