@@ -6,17 +6,25 @@ import com.mk7a.soulbind.main.PluginPermissions;
 import com.mk7a.soulbind.util.BindUtil;
 import com.mk7a.soulbind.util.Util;
 import org.bukkit.Sound;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.ChiseledBookshelf;
+import org.bukkit.block.Shelf;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockDispenseArmorEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -207,6 +215,111 @@ public class ItemProtectionListener implements Listener {
         if (BindUtil.hasBind(item) && BindUtil.getAccessLevel(item, player) != Access.ALLOW) {
             event.setCancelled(true);
         }
+    }
+
+
+
+    @EventHandler
+    public void onChiseledBookshelfInteract(PlayerInteractEvent event) {
+
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+            return;
+        }
+
+        if (event.getHand() != EquipmentSlot.HAND) {
+            return;
+        }
+
+        Block block = event.getClickedBlock();
+        if (block == null) {
+            return;
+        }
+
+        Player player = event.getPlayer();
+        if (Util.canIgnoreSoulBind(player)) {
+            return;
+        }
+
+        if (!(block.getState() instanceof ChiseledBookshelf bookshelf)) {
+            return;
+        }
+
+        if (containsDeniedBind(bookshelf.getInventory(), player)) {
+            event.setCancelled(true);
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1F, 1F);
+        }
+    }
+
+    @EventHandler
+    public void onShelfInteract(PlayerInteractEvent event) {
+
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+            return;
+        }
+
+        if (event.getHand() != EquipmentSlot.HAND) {
+            return;
+        }
+
+        Block block = event.getClickedBlock();
+        if (block == null) {
+            return;
+        }
+
+        Player player = event.getPlayer();
+        if (Util.canIgnoreSoulBind(player)) {
+            return;
+        }
+
+        if (!(block.getState() instanceof Shelf shelf)) {
+            return;
+        }
+
+        if (containsDeniedBind(shelf.getInventory(), player)) {
+            event.setCancelled(true);
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1F, 1F);
+            return;
+        }
+
+        if (!(block.getBlockData() instanceof org.bukkit.block.data.type.Shelf shelfData) || !shelfData.isPowered()) {
+            return;
+        }
+
+        BlockFace facing = shelfData.getFacing();
+        for (BlockFace side : perpendicularFaces(facing)) {
+            Block cursor = block.getRelative(side);
+            for (int step = 0; step < 2; step++) {
+                if (!(cursor.getBlockData() instanceof org.bukkit.block.data.type.Shelf neighborData)
+                        || !neighborData.isPowered()
+                        || neighborData.getFacing() != facing) {
+                    break;
+                }
+                if (cursor.getState() instanceof Shelf neighbor && containsDeniedBind(neighbor.getInventory(), player)) {
+                    event.setCancelled(true);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1F, 1F);
+                    return;
+                }
+                cursor = cursor.getRelative(side);
+            }
+        }
+    }
+
+    private static boolean containsDeniedBind(Inventory inventory, Player player) {
+        for (ItemStack item : inventory.getContents()) {
+            if (item != null && item.hasItemMeta() && BindUtil.hasBind(item)
+                    && BindUtil.getAccessLevel(item, player) != Access.ALLOW) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static BlockFace[] perpendicularFaces(BlockFace facing) {
+        return switch (facing) {
+            case NORTH, SOUTH -> new BlockFace[]{BlockFace.EAST, BlockFace.WEST};
+            case EAST, WEST -> new BlockFace[]{BlockFace.NORTH, BlockFace.SOUTH};
+            default -> new BlockFace[0];
+        };
     }
 
 }
