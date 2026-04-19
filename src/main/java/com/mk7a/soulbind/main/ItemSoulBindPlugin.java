@@ -6,16 +6,12 @@ import com.mk7a.soulbind.listeners.CommandBlockerListener;
 import com.mk7a.soulbind.listeners.ItemModificationListener;
 import com.mk7a.soulbind.listeners.ItemProtectionListener;
 import com.mk7a.soulbind.listeners.ItemRegistrationListener;
+import com.mk7a.soulbind.update.UpdateChecker;
 import com.mk7a.soulbind.util.BindUtil;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.Scanner;
 
 
 public final class ItemSoulBindPlugin extends JavaPlugin {
@@ -33,7 +29,7 @@ public final class ItemSoulBindPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
 
-        updateCheck();
+        UpdateChecker.check(this);
 
         BindUtil.setKeys(bindKey, groupBindKey);
 
@@ -77,29 +73,6 @@ public final class ItemSoulBindPlugin extends JavaPlugin {
 
     private boolean validateConfigVersion() {
         return CONFIG_VER == getConfig().getDouble(VERSION_PATH);
-    }
-
-    private void updateCheck() {
-        Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
-            try {
-                InputStream resource = new URL("https://api.spigotmc.org/legacy/update.php?resource=64541").openStream();
-                Scanner scanner = new Scanner(resource);
-                if (scanner.hasNext()) {
-                    String latestVersion = scanner.nextLine();
-                    String pluginVersion = getDescription().getVersion();
-                    if (updateAvailable(pluginVersion, latestVersion)) {
-                        getLogger().info("An update is available");
-                        getLogger().info("https://www.spigotmc.org/resources/itemsoulbind.64541/");
-                    }
-                }
-            } catch (IOException e) {
-                getLogger().warning("Could not check for updates.");
-            }
-        });
-    }
-
-    private boolean updateAvailable(String pluginVersion, String latestVersion) {
-        return pluginVersion.compareTo(latestVersion) < 0;
     }
 
     @Override
