@@ -1,0 +1,96 @@
+name: ItemSoulBind
+version: '${version}'
+main: com.mk7a.soulbind.ItemSoulBindPlugin
+api-version: '26.3'
+bootstrapper: com.mk7a.soulbind.enchant.SoulBindBootstrap
+folia-supported: true
+authors: [mk7a]
+description: Bind items for a single player's use only
+website: https://github.com/mk7a/ItemSoulBind
+permissions:
+  itemsoulbind.admin:
+    description: All permissions + reload command
+    default: op
+    children:
+      itemsoulbind.bind: true
+      itemsoulbind.bindall: true
+      itemsoulbind.bind.others: true
+      itemsoulbind.unbind: true
+      itemsoulbind.groupbinditem: true
+      itemsoulbind.remotebind: true
+      itemsoulbind.notify: true
+      itemsoulbind.bindinvitems: true
+      itemsoulbind.bindonuse: true
+      itemsoulbind.bindonequip: true
+      itemsoulbind.bindonpickup: true
+      itemsoulbind.book.give: true
+      itemsoulbind.book.use: true
+      itemsoulbind.bypass: true
+      itemsoulbind.keepondeath: true
+  itemsoulbind.bind:
+    description: Allows use of /binditem
+    default: false
+  itemsoulbind.bindall:
+    description: Allows use of /bindall
+    default: false
+  itemsoulbind.bind.others:
+    description: Allows use of /binditem <player>
+    default: false
+    children:
+      itemsoulbind.bind: true
+  itemsoulbind.unbind:
+    description: Allows use of /unbinditem
+    default: false
+  itemsoulbind.groupbinditem:
+    description: Allows use of /groupbinditem <group>
+    default: false
+  itemsoulbind.remotebind:
+    description: Allows use of /remotebinditem <player> <slot>
+    default: false
+  itemsoulbind.bindinvitems:
+    description: Allows use of /bindinvitems <player>
+    default: false
+  itemsoulbind.bindonuse:
+    description: Allows use of /bindonuse
+    default: false
+  itemsoulbind.bindonequip:
+    description: Allows use of /bindonequip
+    default: false
+  itemsoulbind.bindonpickup:
+    description: Allows use of /bindonpickup
+    default: false
+  itemsoulbind.book.give:
+    description: Allows use of /soulbindbook [player]
+    default: false
+  itemsoulbind.book.use:
+    description: Allows binding an item to yourself by combining a soul bind book onto it in an anvil
+    default: true
+  itemsoulbind.notify:
+    description: Notifies if player somehow has item soulbound to another player in their inventory
+    default: false
+  itemsoulbind.keepondeath:
+    description: Soul bound items do not get removed from inventory when player dies
+    default: false
+  itemsoulbind.bypass:
+    description: Bypass soul bind protection, item register string, (crafting, enchanting, anvil, smithing) restrictions
+    default: false
+    children:
+      itemsoulbind.bypass.craft: true
+      itemsoulbind.bypass.enchant: true
+      itemsoulbind.bypass.anvil: true
+      itemsoulbind.bypass.smithing: true
+  itemsoulbind.bypass.craft:
+    description: Bypass crafting restriction (if enabled)
+    default: false
+  itemsoulbind.bypass.enchant:
+    description: Bypass enchanting restriction (if enabled)
+    default: false
+  itemsoulbind.bypass.anvil:
+    description: Bypass anvil restriction (if enabled)
+    default: false
+  itemsoulbind.bypass.smithing:
+    description: Bypass smithing table restriction (if enabled)
+    default: false
+  itemsoulbind.returnitems:
+    description: Permits returning of soul bound items to player and use of return items command
+    default: true

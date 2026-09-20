@@ -1,0 +1,26 @@
+package com.mk7a.soulbind
+
+object Permissions {
+    const val ADMIN = "itemsoulbind.admin"
+    const val BIND = "itemsoulbind.bind"
+    const val BIND_OTHERS = "itemsoulbind.bind.others"
+    const val BIND_ALL = "itemsoulbind.bindall"
+    const val UNBIND = "itemsoulbind.unbind"
+    const val GROUP_BIND = "itemsoulbind.groupbinditem"
+    const val REMOTE_BIND = "itemsoulbind.remotebind"
+    const val BIND_INV_ITEMS = "itemsoulbind.bindinvitems"
+    const val BIND_ON_USE = "itemsoulbind.bindonuse"
+    const val BIND_ON_EQUIP = "itemsoulbind.bindonequip"
+    const val BIND_ON_PICKUP = "itemsoulbind.bindonpickup"
+    const val BOOK_GIVE = "itemsoulbind.book.give"
+    const val BOOK_USE = "itemsoulbind.book.use"
+    const val BYPASS = "itemsoulbind.bypass"
+    const val BYPASS_CRAFT = "itemsoulbind.bypass.craft"
+    const val BYPASS_ENCHANT = "itemsoulbind.bypass.enchant"
+    const val BYPASS_ANVIL = "itemsoulbind.bypass.anvil"
+    const val BYPASS_SMITHING = "itemsoulbind.bypass.smithing"
+    const val KEEP_ON_DEATH = "itemsoulbind.keepondeath"
+    const val NOTIFY = "itemsoulbind.notify"
+    const val RETURN_ITEMS = "itemsoulbind.returnitems"
+    const val GROUP_PREFIX = "itemsoulbind.group."
+}

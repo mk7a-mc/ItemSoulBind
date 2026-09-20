@@ -1,0 +1,101 @@
+# When player interacts with an item with the register string in its lore, item will be soul bound to them
+registerString: "%soulbind%"
+# Group bind string
+#   Place permission after this string, terminated by a space or end of line
+#   Example: %soulbindgroup%perm which will have permission itemsoulbind.group.perm
+groupRegisterString: "%soulbindgroup%"
+
+# SPECIAL BINDS - items with the relevant lore line will only be bound in the specified conditions.
+# Applied to the held item with /bindonuse, /bindonequip and /bindonpickup, each behind its own
+# permission node (itemsoulbind.bindonuse, itemsoulbind.bindonequip, itemsoulbind.bindonpickup).
+# Formatting is ignored when checking for the line. Case-sensitive.
+
+# Binds when the item is used: breaking a block, hitting an entity with any weapon (sword, axe, mace,
+# spear, trident...), shooting a bow or crossbow, throwing a trident
+bouString: "<blue>Soul binds on use"
+# Binds when armor is equipped through in-hand right click
+boeString: "<blue>Soul binds on equip"
+# Binds when item is picked up
+bopString: "<blue>Soul binds on pickup"
+
+# SOUL BIND BOOKS - enchanted books given with /soulbindbook (itemsoulbind.book.give). Combining one
+# onto an item in an anvil binds the item to the player using the anvil (itemsoulbind.book.use).
+# These two values are read at server start: changing them needs a restart, not /isb-reload.
+bookEnchantName: "Soulbound"
+bookAnvilCost: 4
+# Lets a grindstone remove the bind from an item bound with a soul bind book, along with the enchantment.
+# When false, the item comes out of the grindstone still enchanted and bound.
+grindstoneUnbinds: false
+
+# Disable soul bind particle+sound effects
+disableEffects: false
+
+# Display message in item lore of soul bound item
+# Use <username> for player name placeholder
+displayLoreMsg: true
+loreMsg: "<blue>Soul bound to <username>"
+# Similarly for group binds, using placeholder <group>
+displayLoreMsgGroup: true
+loreMsgGroup: "<blue>Soul bound to group <group>"
+
+# Send denyMsg / denyMsgGroup when a player is denied taking a soul bound item out of a container
+showContainerDeny: true
+
+# Log player detected with item soul bound to another player in console
+consoleLogDetection: true
+
+# Prevents placing soul bound blocks
+preventPlacing: false
+
+# Prevents crafting with soul bound items
+preventCraft: false
+
+# Prevents enchanting with soul bound items
+preventEnchant: false
+
+# Prevents anvil use with soul bound items
+preventAnvil: false
+
+# Prevents smithing table use (netherite upgrades, armor trims) with soul bound items
+preventSmithing: false
+
+# Blocks commands when soul bound item is held in hand
+# Only provide the first part of the command, e.g. for "/auction sell" :
+blockedCommands:
+  - "auction"
+
+# =======================
+# Messages | MiniMessage format: https://docs.papermc.io/adventure/minimessage/format/
+msgPrefix: "<dark_gray>[<aqua>Soul<dark_aqua>Bind<dark_gray>]<reset> "
+denyMsg: "<blue>This item is soul bound to another player"
+denyMsgGroup: "<blue>This item is soul bound"
+detectedItemMessage: "<red>An item soul bound to another player was removed from your inventory. Event has been logged."
+detectedItemMessageGroup: "<red>A soul bound item that you do not have access to has been detected in your inventory. Event has been logged."
+# Sent to players with itemsoulbind.notify. Placeholder: <player>
+detectedItemBroadcast: "<red>(<player>) was detected with an item soul bound to another player."
+detectedItemBroadcastGroup: "<red>(<player>) was detected with a soul bound item they do not have access to."
+bindSuccess: "<green>Soul bind complete."
+bindErrorHeldItem: "You must be holding an item in your main hand."
+bindErrorAlreadyBound: "This item is already soul bound."
+bindErrorRemoteNoItem: "Specific target player inventory slot is empty."
+# Binding to a player who isn't online or cached needs a Mojang lookup. Placeholder: <player>
+bindLookup: "<gray>Looking up <player>..."
+bindErrorNoSuchPlayer: "<red>No player found for <player>."
+bindErrorItemChanged: "<red>Your held item changed during the lookup, nothing was bound."
+unbindErrorNotBound: "Item is not soul bound."
+unbindSuccess: "<green>Soul bind removed."
+# Placeholders: <player>, <count>
+inventoryProcessSuccess: "<green>Processed inventory of <player> (<count>)"
+craftDeny: "<red>Cannot craft with soul bound items."
+enchantDeny: "<red>Cannot enchant soul bound items."
+anvilDeny: "<red>Cannot use anvil on soul bound items."
+smithingDeny: "<red>Cannot use a smithing table on soul bound items."
+foundItems: "<gray>Soul bound items found with another player have been returned to you. Use <aqua><click:run_command:'/returnitems'>/returnitems</click></aqua> to get them."
+noItems: "You have no items to retrieve."
+# Placeholder: <player>
+bookGiven: "<green>Gave a soul bind book to <player>."
+specialBindDone: "<green>Special bind applied to item."
+cmdBlocked: "<red>Cannot perform this command on a soul bound item."
+# ======================
+
+configVersionDoNotModify: 2.0

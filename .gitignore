@@ -1,0 +1,31 @@
+# Gradle
+.gradle/
+build/
+# The wrapper jar is needed to build from a fresh clone
+!gradle/wrapper/gradle-wrapper.jar
+
+# Kotlin compiler session data
+.kotlin/
+
+# Dev server from `gradlew runServer`: world, logs, plugin data, downloaded jars
+run/
+
+# IDEs
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+.vscode/
+.classpath
+.project
+.settings/
+bin/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# JVM crash dumps and logs
+hs_err_pid*
+*.log
